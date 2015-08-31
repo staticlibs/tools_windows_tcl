@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" /><title>pg_transaction_status</title><link rel="stylesheet" href="stylesheet.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.70.1" /><link rel="start" href="index.html" title="Pgtcl Reference Manual" /><link rel="up" href="pgtcl-ref-connstatus.html" title="4.2. Connection Status Commands" /><link rel="prev" href="pgtcl-ref-connstatus.html" title="4.2. Connection Status Commands" /><link rel="next" href="pg-parameter-status.html" title="pg_parameter_status" /><link rel="copyright" href="ln-legalnotice.html" title="Legal Notice" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">pg_transaction_status</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="pgtcl-ref-connstatus.html">Prev</a> </td><th width="60%" align="center">4.2. Connection Status Commands</th><td width="20%" align="right"> <a accesskey="n" href="pg-parameter-status.html">Next</a></td></tr></table><hr /></div><div class="refentry" lang="en" xml:lang="en"><a id="pg-transaction-status"></a><div class="titlepage"></div><div class="refnamediv"><h2><span class="refentrytitle">pg_transaction_status</span></h2><p>pg_transaction_status &#8212; Get the current in-transaction status</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><pre class="synopsis">
+pg_transaction_status <em class="parameter"><code>conn</code></em>
+</pre></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2564338"></a><h2>Description</h2><p>
+<code class="function">pg_transaction_status</code> returns the current status of
+the connection: whether it is inside a transaction block, outside a
+transaction block, or inside a failed transaction block.  A transaction
+block begins with the SQL command <code class="literal">BEGIN</code>, and ends with
+one of the SQL commands <code class="literal">COMMIT</code> or
+<code class="literal">ROLLBACK</code>.  A failed transaction block is a transaction
+block after any error occurs; PostgreSQL will
+ignore all SQL commands until the end of the transaction block.
+<code class="function">pg_transaction_status</code> allows an application to
+determine if it is in a transaction block or failed transaction block.
+    </p></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2564383"></a><h2>Arguments</h2><div class="variablelist"><dl><dt><span class="term"><em class="replaceable"><code>conn</code></em></span></dt><dd><p>
+            The handle of the connection on which to report transaction status.
+          </p></dd></dl></div></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2564408"></a><h2>Return Value</h2><p>
+      One of the string values in the following table:
+    </p><div class="informaltable"><a id="pgtcl-transaction-status-table"></a><table border="1"><colgroup><col /><col /></colgroup><thead><tr><th>Value</th><th>Description</th></tr></thead><tbody><tr><td>IDLE</td><td>Connection is idle, not in a transaction block.</td></tr><tr><td>INTRANS</td><td>Connection is in a (non-failed) transaction block.</td></tr><tr><td>INERROR</td><td>Connection is in a failed transaction block.</td></tr><tr><td>UNKNOWN</td><td>Connection is bad or in an unknown state.</td></tr></tbody></table></div></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2564489"></a><h2>Notes</h2><p>
+      This command uses or emulates the PostgreSQL
+      <span class="application">libpq</span>
+      function <code class="function">PQtransactionStatus</code>.
+    </p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="pgtcl-ref-connstatus.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="pgtcl-ref-connstatus.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="pg-parameter-status.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">4.2. Connection Status Commands </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> pg_parameter_status</td></tr></table></div></body></html>

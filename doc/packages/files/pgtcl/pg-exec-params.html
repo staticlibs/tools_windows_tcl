@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" /><title>pg_exec_params</title><link rel="stylesheet" href="stylesheet.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.70.1" /><link rel="start" href="index.html" title="Pgtcl Reference Manual" /><link rel="up" href="pgtcl-ref-query.html" title="4.3. Query Execution Commands" /><link rel="prev" href="pg-select.html" title="pg_select" /><link rel="next" href="pg-exec-prepared.html" title="pg_exec_prepared" /><link rel="copyright" href="ln-legalnotice.html" title="Legal Notice" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">pg_exec_params</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="pg-select.html">Prev</a> </td><th width="60%" align="center">4.3. Query Execution Commands</th><td width="20%" align="right"> <a accesskey="n" href="pg-exec-prepared.html">Next</a></td></tr></table><hr /></div><div class="refentry" lang="en" xml:lang="en"><a id="pg-exec-params"></a><div class="titlepage"></div><div class="refnamediv"><h2><span class="refentrytitle">pg_exec_params</span></h2><p>pg_exec_params &#8212; Execute a parameterized SQL command on the server</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><pre class="synopsis">
+pg_exec_params <em class="parameter"><code>conn</code></em> <em class="parameter"><code>commandString</code></em> <em class="parameter"><code>resultFormats</code></em> <em class="parameter"><code>argFormats</code></em> <em class="parameter"><code>argTypes</code></em> ?<span class="optional"><em class="parameter"><code>param...</code></em></span>?
+</pre></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2565939"></a><h2>Description</h2><p>
+<code class="function">pg_exec_params</code> sends a command to the PostgreSQL server
+with parameters to be bound to place-holders in the command, and returns a
+result handle.
+This is similar to <a href="pg-exec-prepared.html" title="pg_exec_prepared"><span class="refentrytitle">pg_exec_prepared</span></a>, but doesn't
+use a pre-prepared statement, and if you want to use binary parameters you
+must also provide the type OIDs.  By separating parameters from the SQL
+command string, this command allows binding arguments to SQL statement
+parameters without quoting issues, and supports sending and receiving raw
+binary data.
+    </p></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2565966"></a><h2>Arguments</h2><div class="variablelist"><dl><dt><span class="term"><em class="replaceable"><code>conn</code></em></span></dt><dd><p>
+            The handle of the connection on which to execute the command.
+          </p></dd><dt><span class="term"><em class="replaceable"><code>commandString</code></em></span></dt><dd><p>
+            The SQL command to parse, bind arguments to, and execute.
+            Argument place-holders are indicated as <code class="literal">$1</code>,
+            <code class="literal">$2</code>, etc.
+          </p></dd><dt><span class="term"><em class="replaceable"><code>resultFormats</code></em></span></dt><dd><p>
+The format that the query results are expected in. Use <code class="literal">T</code>
+or <code class="literal">TEXT</code> for text format results,
+and <code class="literal">B</code> or <code class="literal">BINARY</code> for binary format
+results. If this parameter is an empty string, <code class="literal">TEXT</code> is
+assumed.
+          </p></dd><dt><span class="term"><em class="replaceable"><code>argFormats</code></em></span></dt><dd><p>
+The formats that the query parameters are sent in. This parameter can be an
+empty string, a single word, or a list.  If this parameter is an empty
+string, all query parameters are sent in text format.  If this
+parameter is a single word, it specifies the format for all query
+parameters. Use <code class="literal">T</code> (or <code class="literal">TEXT</code>) for text
+format, and <code class="literal">B</code> (or <code class="literal">BINARY</code>) for binary
+format.  If this parameter is a list, it must contain a single word
+(<code class="literal">T</code> or <code class="literal">TEXT</code> or <code class="literal">B</code> or
+<code class="literal">BINARY</code>) specifying the format for each query parameter.
+          </p></dd><dt><span class="term"><em class="replaceable"><code>argTypes</code></em></span></dt><dd><p>
+A list of PostgreSQL Type OIDs for the query parameter arguments.
+This list must either be empty, or contain one entry for each query
+parameter. If the list is empty, all arguments are treated as untyped
+literal strings, and all argument formats must be text. If the list is
+non-empty, each zero entry results in the corresponding text format
+argument being treated as an untyped literal string. Each non-zero entry
+is the type OID for the corresponding binary format argument. To get
+type OIDs, query the <code class="literal">pg_type</code> table.
+          </p></dd><dt><span class="term"><em class="replaceable"><code>param...</code></em></span></dt><dd><p>
+Zero or more parameter values to bind to command string place-holders.
+The first parameter will replace <code class="literal">$1</code> in the
+prepared query, the second parameter will replace <code class="literal">$2</code>,
+etc. The parameters will be interpreted as text or binary data
+according to the <em class="replaceable"><code>argFormats</code></em> argument.
+          </p></dd></dl></div></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2566183"></a><h2>Return Value</h2><p>
+      Returns a result handle which can be used with
+      <a href="pg-result.html" title="pg_result"><span class="refentrytitle">pg_result</span></a> to obtain the results of the command.
+    </p><p>
+      A Tcl error will be thrown if an error occurs communicating with
+      the database. Note that no Tcl error will be thrown if an invalid
+      query is successfully sent to the server and a response successfully
+      received. The result status must be checked after a normal return.
+    </p></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2566207"></a><h2>Notes</h2><p>
+Be sure to brace-quote or escape the parameter place-holders such as
+<code class="literal">$1</code> in the SQL command string
+to protect them from Tcl variable expansion.
+    </p><p>
+The command syntax of <code class="function">pg_exec_params</code> supports mixed
+text and binary result columns, but the underlying
+PostgreSQL library
+(<span class="application">libpq</span>) does not currently support this.
+Therefore, all result columns must be text format, or all columns must be
+binary format.
+    </p><p>
+      There is no support for passing NULL value arguments as query parameters.
+    </p><p>
+      Be sure to free the returned result handle with
+      <code class="function">pg_result -clear</code> when you are done with it.
+    </p><p>
+      This command was added in
+      <span class="application">pgtclng-1.5.1</span> and in
+      <span class="application">pgintcl-2.1.0</span>.
+    </p><p>
+      This command uses or emulates the PostgreSQL
+      <span class="application">libpq</span>
+      function <code class="function">PQexecParams</code>.
+    </p><p>
+<a href="pg-exec.html" title="pg_exec"><span class="refentrytitle">pg_exec</span></a> also supports parameterized queries, but only
+TEXT parameter and result types.
+If all your parameters are TEXT type, and your result is TEXT type,
+it is simpler to use <a href="pg-exec.html" title="pg_exec"><span class="refentrytitle">pg_exec</span></a> instead.
+    </p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="pg-select.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="pgtcl-ref-query.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="pg-exec-prepared.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">pg_select </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> pg_exec_prepared</td></tr></table></div></body></html>

@@ -1,0 +1,188 @@
+# automatically generated from XOTclIDE
+# script require component {IDECore IDEView IDEEditor IDETclParser IDEBaseGUI}
+@ Component IDEScriptEditor {
+description {eval the line below to start script browser
+
+IDE::ScriptEditor newBrowser}
+}
+package provide IDEScriptEditor 0.83
+package require IDEBaseGUI
+package require IDECore
+package require IDEEditor
+package require IDETclParser
+package require IDEView
+Class HighlightGlobalContext -superclass ::PrsSyntaxHightlight
+@ ::HighlightGlobalContext idemeta component IDEScriptEditor
+Class IDE::ScriptEditor -superclass ::IDE::Browser
+@ ::IDE::ScriptEditor idemeta component IDEScriptEditor
+IDE::ScriptEditor instproc debugScript {} {
+    set text [[self]::editor getText]
+    if {$text ne ""} {
+        atk::debugScript $text
+    }
+}
+IDE::ScriptEditor instproc destroy {} {
+    next
+}
+IDE::ScriptEditor instproc getTitle {} {
+   return "Script Editor"
+}
+IDE::ScriptEditor instproc specificInit args {
+    my instvar win
+
+    frame $win.butFrame
+    button $win.butSyntaxHL -command [list [self]::editor syntaxHighlight] -text "Syntax Highlight"
+    button $win.butSyntaxCheck -command [list [self]::editor syntaxCheck] -text "Syntax Check"
+    button $win.runscript -command [list [self]::editor runScript] -text "Run Script"
+    button $win.runinslave -command [list [self]::editor runInSlave] -text "Run in Slave Interpreter"
+    IDE::TclScripEditor [self]::editor $win.editor
+    [self]::editor editMode xotcl
+    pack $win.butSyntaxHL $win.butSyntaxCheck $win.runscript $win.runinslave -side left -in $win.butFrame
+    if {[Object isobject IDE::ExtendedDebugger]} {
+        button $win.debugscript -command [list [self] debugScript] -text "Debug Script"
+        pack $win.debugscript -side left -in $win.butFrame -after $win.runscript
+    }
+    pack $win.butFrame -fill x
+    pack $win.editor -expand yes -fill both
+
+    next
+}
+IDE::ScriptEditor proc newBrowser {} {
+     return [my new [Object autoname .workspace]]
+}
+Class IDE::TclScripEditor -superclass ::IDE::TclModeEdit
+@ ::IDE::TclScripEditor idemeta component IDEScriptEditor
+IDE::TclScripEditor instproc checkScript script {
+    set script [my getText]
+    if {$script eq ""} {
+       IDE::Dialog error "Nothing to evaluate"
+       return 0
+    } elseif {![info complete $script]} {
+       IDE::Dialog error "value is not proper Tcl script"
+       return 0
+    }
+    return 1
+}
+IDE::TclScripEditor instproc destroy {} {
+    if {[lsearch [interp slaves] scriptslave]!=-1} {
+       interp delete scriptslave
+    }
+    next
+}
+IDE::TclScripEditor instproc fileIn {} {
+    next
+    my instvar fileName
+    if {[info exists fileName]} {
+        [my info parent] setTitleAddition $fileName
+    }
+}
+IDE::TclScripEditor instproc fileOut {} {
+    next
+    my instvar fileName
+    if {[info exists fileName]} {
+        [my info parent] setTitleAddition $fileName
+    }
+}
+IDE::TclScripEditor instproc fileSave {} {
+    my instvar fileName
+    if {![info exists fileName]} {
+        my fileOut
+    } else {
+        my saveFile $fileName
+    }
+}
+IDE::TclScripEditor instproc fillMenuStruct ms {
+    $ms enablementHandler [self]
+    my menuInsertions $ms
+    $ms addSeparator
+
+    $ms addCommand {Open File} [list [self] fileIn] 0 Control-o
+    $ms addCommand {Append File} [list [self] fileAppend] 0 Control-p
+    $ms addCommand {Save File} [list [self] fileSave] 0 Control-s
+    $ms addCommand {Save File As} [list [self] fileOut] 5
+    $ms addSeparator
+    $ms addMenuItem [IDE::MenuCommand new -childof $ms -accelerator Alt-q -name {Do it} -command [list [self] evalSelection] -popdownMenu 1 -enableList isValidTextSelection]
+    $ms addMenuItem [IDE::MenuCommand new -childof $ms -accelerator Control-q -name {Print it} -command [list [self] evalDisplaySelection] -popdownMenu 1 -enableList isValidTextSelection]
+    $ms addMenuItem [IDE::MenuCommand new -childof $ms -accelerator Alt-x -name {Substitute it} -command [list [self] evalSubstituteSelection] -popdownMenu 1 -enableList isValidTextSelection]
+    $ms addMenuItem [IDE::MenuCommand new -childof $ms -accelerator Control-g -name {Inspect it} -command [list [self] evalInspectSelection] -popdownMenu 1 -enableList isValidTextSelection]
+    $ms addMenuItem [IDE::MenuCommand new -childof $ms -accelerator Control-r -name {Browse it} -command [list [self] browseSelection] -popdownMenu 1 -enableList isValidTextSelection]
+    $ms addSeparator
+    $ms addMenuItem [IDE::MenuCheckbox new -childof $ms -name {Wrap Mode} -command [list [self] switchWrap] -variable [self]::wrapMode -accelerator Alt-w]
+    $ms addCommand "Go to line" [list [self] goToLine]
+    $ms addMenuItem [::IDE::MenuCommand new -childof $ms -name Find/Replace -command [list IDE::FindReplace bindToView [self]] -popdownMenu 1 -accelerator Alt-f]
+}
+IDE::TclScripEditor instproc getMenuStruct {} {
+    IDE::MenuStruct create [self]::ms File 0
+}
+IDE::TclScripEditor instproc menuInsertions ms {
+    $ms addCommand {Syntax Check} [list [self] syntaxCheck]
+    $ms addCommand {Run Script} [list [self] runScript]
+}
+IDE::TclScripEditor instproc runInSlave {} {
+    set script [my getText]
+    if {$script ne ""} {
+        if {[lsearch [interp slaves] scriptslave]==-1} {
+            interp create scriptslave
+        }
+        scriptslave eval $script
+    }
+}
+IDE::TclScripEditor instproc runScript {} {
+    set script [my getText]
+    if {[my checkScript $script]} {
+        IDE::System evalString $script
+    }
+}
+IDE::TclScripEditor instproc save {} {
+    my fileOut
+}
+IDE::TclScripEditor instproc saveForce {} {
+    my fileOut
+}
+IDE::TclScripEditor instproc syntaxCheck {} {
+    set context [PrsContext new -mixin ParseGlobalContext]
+    $context parseAndCheck [my getText]
+    if {[$context hasErrors]} {
+        IDE::SyntaxErrorView new -errors [$context errors] -controler [self] -editor [self] -init [Object autoname .syntaxview]
+        return 0
+    } else {
+        IDE::Dialog message "No syntax errors found"
+    }
+}
+IDE::TclScripEditor instproc syntaxHighlight {} {
+    set prs [HighlightGlobalContext new -mixin ParseGlobalContext -volatile -text [self]]
+    set text [my getText]
+    if {$text ne ""} {
+        $prs parseAndVisit $text
+    }
+}
+IDE::TclScripEditor instproc syntaxHighlightIfWanted {} {
+}
+Class ParseGlobalContext
+@ ::ParseGlobalContext idemeta component IDEScriptEditor
+ParseGlobalContext instproc checkVariable variable {
+   expr {[lsearch [my variables] $variable]>=0 || [info global $variable] ne ""}
+}
+ParseGlobalContext instproc parse script {
+    my instvar object 
+    if {![info complete $script]} {
+        my lappend errors [list 0 0 "script is not proper tcl list"]
+        return 0
+    }
+    my set isTclGlobalScript 1
+    my set isTclproc 0
+    set obj [ReadStringStream new -childof [self] -string $script]
+    set parser [TclParser new -childof [self] -stream $obj]
+    my parser $parser
+    my set variables [list]
+    if {[$parser catchParseErrors {
+            set root [PrsNoSubst new -childof $parser -begin 0 -end [string length $script]]
+            $parser root $root
+            $root evalContents}]} {
+        return 1
+    } else {
+        my lappend errors [list 0 1 [$parser set parseErrors]]
+        return 0
+    }
+}
+

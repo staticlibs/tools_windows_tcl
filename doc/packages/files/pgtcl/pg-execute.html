@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" /><title>pg_execute</title><link rel="stylesheet" href="stylesheet.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.70.1" /><link rel="start" href="index.html" title="Pgtcl Reference Manual" /><link rel="up" href="pgtcl-ref-query.html" title="4.3. Query Execution Commands" /><link rel="prev" href="pg-exec.html" title="pg_exec" /><link rel="next" href="pg-select.html" title="pg_select" /><link rel="copyright" href="ln-legalnotice.html" title="Legal Notice" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">pg_execute</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="pg-exec.html">Prev</a> </td><th width="60%" align="center">4.3. Query Execution Commands</th><td width="20%" align="right"> <a accesskey="n" href="pg-select.html">Next</a></td></tr></table><hr /></div><div class="refentry" lang="en" xml:lang="en"><a id="pg-execute"></a><div class="titlepage"></div><div class="refnamediv"><h2><span class="refentrytitle">pg_execute</span></h2><p>pg_execute &#8212; Execute an SQL command on the server and optionally loop over the results</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><pre class="synopsis">
+pg_execute ?<span class="optional">-array <em class="parameter"><code>arrayVar</code></em></span>? ?<span class="optional">-oid <em class="parameter"><code>oidVar</code></em></span>? <em class="parameter"><code>conn</code></em> <em class="parameter"><code>commandString</code></em> ?<span class="optional"><em class="parameter"><code>procedure</code></em></span>?
+</pre></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2565143"></a><h2>Description</h2><p>
+<code class="function">pg_execute</code> submits a command to the
+PostgreSQL server.
+    </p><p>
+If the command is not a <span><strong class="command">SELECT</strong></span> statement, the
+number of rows affected by the command is returned.  If the command
+is an <span><strong class="command">INSERT</strong></span> statement and a single row is
+inserted, the OID of the inserted row (if available) is stored in the variable
+<em class="replaceable"><code>oidVar</code></em> if the optional <code class="option">-oid</code>
+argument is supplied.
+    </p><p>
+If the command is a <span><strong class="command">SELECT</strong></span> statement, then, for each row
+in the result, the row values are stored in the
+<em class="replaceable"><code>arrayVar</code></em> variable, if supplied, using the column
+names as the array indices, else in variables named by the column names,
+and then the optional <em class="replaceable"><code>procedure</code></em> is executed if
+supplied.  (Omitting the <em class="replaceable"><code>procedure</code></em> probably makes
+sense only if the query will return a single row.)  The number of rows
+selected is returned.
+    </p><p>
+The <em class="replaceable"><code>procedure</code></em> can use the Tcl commands
+<code class="literal">break</code>, <code class="literal">continue</code>, and
+<code class="literal">return</code> with the expected behavior.  Note that if
+the <em class="replaceable"><code>procedure</code></em> executes
+<code class="literal">return</code>, then <code class="function">pg_execute</code>
+does not return the number of affected rows.
+    </p><p>
+<code class="function">pg_execute</code> is a newer command which provides
+a superset of the features of <a href="pg-select.html" title="pg_select"><span class="refentrytitle">pg_select</span></a> and
+can replace <a href="pg-exec.html" title="pg_exec"><span class="refentrytitle">pg_exec</span></a> in many cases where access
+to the result handle is not needed.
+    </p></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2565264"></a><h2>Arguments</h2><div class="variablelist"><dl><dt><span class="term"><code class="option">-array <em class="replaceable"><code>arrayVar</code></em></code></span></dt><dd><p>
+            Specifies the name of an array variable where result rows are
+            stored, indexed by the column names.  This is ignored if
+            <em class="replaceable"><code>commandString</code></em> is not a
+            <span><strong class="command">SELECT</strong></span> statement.
+          </p></dd><dt><span class="term"><code class="option">-oid <em class="replaceable"><code>oidVar</code></em></code></span></dt><dd><p>
+            Specifies the name of a variable into which the row OID from an
+            <span><strong class="command">INSERT</strong></span> statement will be stored. The OID of
+            a row is only available if the table was created with OIDs.
+            Starting with PostgreSQL-8.0, tables are not created with OIDs
+            by default.  If the table has no OIDs, 0 is stored in oidVar.
+          </p></dd><dt><span class="term"><em class="replaceable"><code>conn</code></em></span></dt><dd><p>
+            The handle of the connection on which to execute the command.
+          </p></dd><dt><span class="term"><em class="replaceable"><code>commandString</code></em></span></dt><dd><p>
+            The SQL command to execute.
+          </p></dd><dt><span class="term"><em class="replaceable"><code>procedure</code></em></span></dt><dd><p>
+            Optional procedure to execute for each result row of a
+            <span><strong class="command">SELECT</strong></span> statement.
+          </p></dd></dl></div></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2565379"></a><h2>Return Value</h2><p>
+      The number of rows affected or returned by the command.
+    </p><p>
+      A Tcl error will be thrown if an error occurs communicating with
+      the database, or if there is an error processing the query. Note
+      that this differs from <a href="pg-exec.html" title="pg_exec"><span class="refentrytitle">pg_exec</span></a>, which will not
+      throw a Tcl error for a query which generates a database error.
+      A Tcl error will also be thrown if a procedure body is supplied
+      and its execution results in a Tcl error.
+    </p><p>
+      For database server handled errors, <code class="function">pg_execute</code> will
+      throw a Tcl error and the error message will be a two-element list.
+      The first element is an error code, such as
+      <code class="literal">PGRES_FATAL_ERROR</code>, and
+      the second element is the database server error text.
+      Unfortunately, other errors also result in a Tcl error being thrown
+      but the error message is not a list - just the message text, so
+      the list form of the error message cannot be assumed.
+    </p></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2565425"></a><h2>Notes</h2><p>
+      <code class="function">pg_execute</code> cannot be used to start a
+      <span><strong class="command">COPY</strong></span> because it doesn't return a result handle.
+      You must use <a href="pg-exec.html" title="pg_exec"><span class="refentrytitle">pg_exec</span></a> to start a
+      <span><strong class="command">COPY</strong></span>.
+    </p><p>
+      This command uses or emulates the PostgreSQL
+      <span class="application">libpq</span>
+      function <code class="function">PQexec</code>.
+    </p></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2565471"></a><h2>Examples</h2><p>
+      In the following examples, error checking with
+      <code class="literal">catch</code> has been omitted for clarity.
+    </p><p>
+      Insert a row and save the OID in <code class="varname">result_oid</code>,
+assuming the mytable was created using <span><strong class="command">WITH OIDS</strong></span>:
+</p><pre class="programlisting">
+pg_execute -oid result_oid $conn "INSERT INTO mytable VALUES (1);"
+</pre><p>
+    </p><p>
+      Print the columns <code class="literal">item</code> and <code class="literal">value</code>
+      from each row:
+</p><pre class="programlisting">
+pg_execute -array d $conn "SELECT item, value FROM mytable" {
+    puts "Item=$d(item) Value=$d(value)"
+}
+</pre><p>
+    </p><p>
+      Find the maximum and minimum values and store them in
+      <code class="literal">$s(max)</code> and <code class="literal">$s(min)</code>:
+</p><pre class="programlisting">
+pg_execute -array s $conn "SELECT max(value) AS max, min(value) AS min FROM mytable"
+</pre><p>
+    </p><p>
+      Find the maximum and minimum values and store them in
+      <code class="literal">$max</code> and <code class="literal">$min</code>:
+</p><pre class="programlisting">
+pg_execute $conn "SELECT max(value) AS max, min(value) AS min FROM mytable"
+</pre><p>
+    </p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="pg-exec.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="pgtcl-ref-query.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="pg-select.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">pg_exec </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> pg_select</td></tr></table></div></body></html>

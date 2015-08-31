@@ -1,0 +1,6 @@
+set preStartScript {}
+set componentsToLoad {xdobry::sql xdobry::mysql xdobry::odbc xdobry::pgsql xdobry::sqlite xdobry::access xdobry::oratcl}
+set startScript {puts "It seems xosql is ready for use. Please conult the documentation how to use this library"
+
+}
+

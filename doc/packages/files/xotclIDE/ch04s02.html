@@ -1,0 +1,217 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Syntax Checking</title><meta name="generator" content="DocBook XSL Stylesheets V1.68.1"><link rel="start" href="index.html" title="XOTclIDE User Guide"><link rel="up" href="ch04.html" title="Chapter 4. Extended Features"><link rel="prev" href="ch04.html" title="Chapter 4. Extended Features"><link rel="next" href="ch04s03.html" title="Configurations Management"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Syntax Checking</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch04.html">Prev</a> </td><th width="60%" align="center">Chapter 4. Extended Features</th><td width="20%" align="right"> <a accesskey="n" href="ch04s03.html">Next</a></td></tr></table><hr></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2983297"></a>Syntax Checking</h2></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2983302"></a>Reason for syntax checking in Tcl/XOTcl</h3></div></div></div><p>
+Tcl has no types and and this is good.
+One disadvantage is that ugly syntax errors (typically typos) 
+crash your program the first time you run it.
+Therefore you must care about running every piece of your code through interpreter by writing special test procedures.
+Syntax checking with XOTclIDE can find most of these errors
+(syntax errors) at editing time by simulating the interpreter.
+The syntax checker can parse and interpret code without running it.
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2983320"></a>Syntax checker implementation</h3></div></div></div><p>
+XOTclIDE implements a static syntax checker.
+It parses Tcl/XOTcl procedures and finds errors that normally appear only at run time.
+Because XOTclIDE does not manage source code but manages a Tcl/XOTcl interpreter it always checks a method in the actual interpreter context.
+You cannot check your Tcl files without loading (source $your_file) the procedures into the interpreter.
+The following syntax checks are processed.
+
+
+</p><div class="itemizedlist"><ul type="disc"><li><p>check all called procedures</p></li><li><p>check the count of arguments</p></li><li><p>simulate quote and command substitution</p></li><li><p>simulate evaluation of control structure commands (if, for, foreach, ...)</p></li><li><p>check variable visibility</p></li><li><p>check XOTcl self method calls.
+(my callMe; [self] callMe)</p></li></ul></div><p>
+Syntax Checking can be used in two ways
+
+
+</p><div class="itemizedlist"><ul type="disc"><li><p>Syntax check while editing or accepting code.</p></li><li><p>Run the syntax checker on projects,
+so you can check existing Tcl/XOTcl sources.</p></li></ul></div><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2983402"></a>Example Tcl procedures</h3></div></div></div><p>
+</p><pre class="programlisting">
+procs example {a} {
+     set b [lindex $a 0]
+     puts "$a $c"
+     set e [lindex $a end dummy]
+     foreach d $a {
+         if {$d==a} {
+              putd $d
+         }
+     }		
+}
+</pre><p>
+
+The syntax checker will find the following errors:
+
+
+
+</p><pre class="programlisting">
+procs example {a} {
+      set b [lindex $a 0]
+      puts "$a $c"
+      # unknown variable c
+      set e [lindex $a end dummy]
+      # await (2,2) arguments
+      foreach d $a {
+          if {$d==a} {
+                putd $d
+                # unknown proc
+          }
+      }		
+}
+</pre><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2983432"></a>Example XOTcl methods</h3></div></div></div><p>
+</p><pre class="programlisting">
+Class Test -parameter {par1}
+Test instproc foo1 {a {b 1}} {
+     puts "[self] $a $b"
+}
+# Method to check
+Test instproc foo2 {b} {
+     my foo1 test
+     my foo1 test 1 2
+     # await (1,2) arguments
+     foreach elem $b {
+          puts "[my par1] $elem"
+          my par1 $elem
+          my foo3
+          # unknown instproc
+     }
+     set c $d
+     # unknown variable d			
+}
+</pre><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2983453"></a>Syntax Checking while editing</h3></div></div></div><p>
+To enable syntax checking while editing, click on the check-box in menu 
+
+
+<span class="guimenu">Edit</span>-&gt;<span class="guimenuitem">Syntaxcheck on Save</span>.
+All accepted (saved) code will be syntax-checked.
+If errors are found a new window with syntax messages are displayed.
+You can see the corresponding code in the editor by clicking on the list items. (see 
+<a href="ch04s02.html#syntaxEdit" title="Figure 4.4. Syntax Checker Dialog">Figure 4.4, “Syntax Checker Dialog”</a>)
+</p><p>
+If the errors shown by the syntax checker are not really errors or
+you have already corrected the errors you can press the button 
+
+<span class="guibutton">Force Saving</span>.
+The code shown in the editor will be accepted without syntax checking.
+</p><p>
+If you want to force syntax checking without accepting choose menu
+
+
+<span class="guimenu">Edit</span>-&gt;<span class="guisubmenu">Syntax Highlight</span>-&gt;<span class="guimenuitem">Force Syntax Check</span>.
+
+
+</p><div class="figure"><a name="syntaxEdit"></a><p class="title"><b>Figure 4.4. Syntax Checker Dialog</b></p><div class="mediaobject"><img src="syntaxedit.png" alt="Syntax Checker Dialog"></div></div><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2983558"></a>Syntax Checker Browser</h3></div></div></div><p>
+You can launch this tool from the menu 
+
+
+<span class="guimenu">System</span>-&gt;<span class="guimenuitem">Syntax Checker</span>.
+Choose the components you will check
+and run the check with button 
+
+<span class="emphasis"><em>Check Selected</em></span>.
+You can browse the errors by clicking the other two lists.
+
+
+</p><div class="figure"><a name="syntaxCheck"></a><p class="title"><b>Figure 4.5. Syntax Checker Tool</b></p><div class="mediaobject"><img src="syntaxchecker.png" alt="Syntax Checker Tool"></div></div><p>
+You can produce a protocol of checking as text file with menu 
+
+
+<span class="guimenu">Syntax Check</span>-&gt;<span class="guimenuitem">Protocol to file</span>.
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2983638"></a>Tcl/XOTcl Parser</h3></div></div></div><p>
+The XOTclIDE syntax checker works by using its Tcl parser programmed in XOTcl (see component IDETclParser).
+It produces a parser tree that can also be used for other purposes.
+At this time the syntax highlighting is also based on this parser.
+</p><p>
+Other ways of using Tcl parser in Tcl.
+
+
+</p><div class="itemizedlist"><ul type="disc"><li><p>Normalize source code (pretty print)</p></li><li><p>convert source codes from or to another object oriented Tcl.
+(ITcl)</p></li><li><p>Refactoring tools in the manner of Smalltalk.</p></li></ul></div><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2983682"></a>How to extend syntax interpretation</h3></div></div></div><p>
+See the 
+
+<span class="emphasis"><em>PrsContext&gt;checkTclCommand</em></span> method.
+The syntax of all Tcl control command are coded as simple pieces of code.
+
+</p><pre class="programlisting">
+# while proc
+[$command getElem 1] substituteContents
+[$command getElem 2] evalContents
+# set proc
+if {$count==2} {
+    my addVariableFrom [$command getElem 1]
+} else {
+    my checkVariableFrom [$command getElem 1] $notifier
+}
+</pre><p>
+
+It should not be difficult to extend the semantics for more commands.
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2983708"></a>Problems</h3></div></div></div><p>
+The syntax checker cannot simulate the full power of a Tcl interpreter.
+For example, it interprets double substitution as:
+
+</p><pre class="programlisting">
+set a putd
+$a hallo
+set a c
+set $a 2
+puts $c
+</pre><p>
+
+"$a hallo" will be not reported as an error but "puts $c" will report the error "unknown variable c".
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2983728"></a>Magic strings for checker</h3></div></div></div><p>
+If you want to avoid syntax checking for one method place the string 
+
+<span class="emphasis"><em>"no syntax check"</em></span> in the method (probably as a comment).
+</p><p>
+If you want to force the checker to accept a variable use 
+
+<span class="emphasis"><em>"add variables (varName varName2)"</em></span>
+</p><pre class="programlisting">
+# add variables (c)
+set a c
+set $a 3
+puts $c
+</pre><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2983758"></a>Checking Referenced Object Calls</h3></div></div></div><p>
+It is also not possible to check referenced object calls:
+
+
+</p><pre class="programlisting">
+set a [MyClass new]
+$a doJob
+# also direct call by object name
+MyClass myObject
+myObject doJob
+</pre><p>
+The first method call will be not checked.
+The checker has no information about what is $a.
+The second method call will be reported with the error "no such proc" (myObject).
+This second type of call should be very rare in XOTcl programs (besides global singleton objects).
+</p><p>
+To solve the problem the checker would need more type information.
+Type information could be coded as meta information in the class.
+For example:
+
+
+</p><pre class="programlisting">
+Class A
+A addMetaVariable drawContext DrawContext
+A instproc draw {} {
+my instvar drawContext
+$drawContext drawLine 0 2 0 50
+}
+</pre><p>
+In this case the Syntax Checker would know that "drawContext" references an object of class "DrawContext".
+The same thing could be done for method arguments or even all variables by using special in-line directives
+
+
+</p><pre class="programlisting">
+set a [MyClass new]
+# variableType a MyClass
+$a doJob
+</pre><p>
+This could be a back door to make Tcl type-safe if you want.
+In fact, the meta type information could be collected by doing analysis of a running system (for example by using XOTcl filters).
+This type informations could also be used to build XOTcl assertions.
+</p><p>
+There is a chance of making a very powerful Tcl development system even with type safe syntax checking.
+</p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch04.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="ch04.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ch04s03.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter 4. Extended Features </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Configurations Management</td></tr></table></div></body></html>

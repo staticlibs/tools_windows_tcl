@@ -1,0 +1,74 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Object-Orientation with XOTcl Components and Object Introspection - Tutorial</title><meta name="generator" content="DocBook XSL Stylesheets V1.68.1"><link rel="start" href="index.html" title="XOTclIDE User Guide"><link rel="up" href="ch02.html" title="Chapter 2. Getting Started Tutorial"><link rel="prev" href="ch02.html" title="Chapter 2. Getting Started Tutorial"><link rel="next" href="ch03.html" title="Chapter 3. Programming with XOTclIDE"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Object-Orientation with XOTcl Components and Object Introspection - Tutorial</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch02.html">Prev</a> </td><th width="60%" align="center">Chapter 2. Getting Started Tutorial</th><td width="20%" align="right"> <a accesskey="n" href="ch03.html">Next</a></td></tr></table><hr></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2979945"></a>Object-Orientation with XOTcl Components and Object Introspection - Tutorial</h2></div></div></div><p>
+In this section you will learn about the dynamic and object-oriented aspects of XOTcl programming in XOTclIDE.
+</p><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2979957"></a>Load Sample Application</h3></div></div></div><p>
+Start XotclIDE:
+
+</p><pre class="screen">
+[artur@rybnik xotclIDE]$ ./XotclIDE
+</pre><p>
+Now load the component 
+<span class="emphasis"><em>SampleComponent</em></span>
+<sup>[<a name="id2979973" href="#ftn.id2979973">1</a>]</sup>
+that is included in the XOTclIDE distribution.
+Choose the menu 
+
+<span class="guimenu">Component</span>-&gt;<span class="guimenuitem">Load Package</span>
+in Component Browser.
+From the dialog-box select the
+“<span class="quote">SampleComponent</span>” package to load.
+Now you should see the following in your Component Browser window:
+
+</p><div class="figure"><a name="compBrowserSample"></a><p class="title"><b>Figure 2.7. Sample Component in Component Browser</b></p><div class="mediaobject"><img src="tut_cbrowser.png" alt="Sample Component in Component Browser"></div></div><p>
+The Component has two classes (Railroad and Wheel).
+You can browse the methods of these classes to see how the component works.
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2980041"></a>Create an Instance of a Class</h3></div></div></div><p>
+Now try creating some instances of the
+<span class="emphasis"><em>Railroad</em></span> class.
+Select the 
+<span class="emphasis"><em>Railroad</em></span> class in Class view and choose
+the menu 
+
+<span class="guimenu">Class</span>-&gt;<span class="guimenuitem">Create Instance</span>.
+You will see the following dialog
+
+</p><div class="figure"><a name="createInstance"></a><p class="title"><b>Figure 2.8. Create Instance Dialog</b></p><div class="mediaobject"><img src="tut_createinstance.png" alt="Create Instance Dialog"></div></div><p>
+
+In this dialog you can specify the arguments (or additional arguments) for the init method (passed to init method or parameters).
+The class definition of <span class="emphasis"><em>Railroad</em></span> is
+</p><pre class="screen">
+Class Railroad -parameter {{speed 4}}
+</pre><p>
+You could modify the start speed by specifying a different speed value (try "-speed 10").
+For now you can simply push the OK button and use default speed 4.
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2980122"></a>Object Inspector</h3></div></div></div><p>
+The new created object of class Railroad builds a window and starts to run.
+</p><p>
+</p><div class="figure"><a name="rail"></a><p class="title"><b>Figure 2.9. Sample Railway application</b></p><div class="mediaobject"><img src="tut_sampleapp.png" alt="Sample Railway application"></div></div><p>
+</p><p>
+In addition XOTclIDE can show another window called an object inspector browser.
+This window shows the internal structure of XOTcl Objects.
+You can see an Object's variables (attributes), subobjects (aggregated objects) and methods.
+</p><p>
+You can modify an Object's state by changing a variable in the browser.
+Choose the <span class="emphasis"><em>speed</em></span> variable.
+You should see the value 4 in your edit-area view.
+Type 20 in this area and press <span class="keysym">Control-S</span> or choose menu 
+
+
+<span class="guimenu">Edit</span>-&gt;<span class="guimenuitem">Save</span>
+You should see the locomotive speed up.
+
+
+</p><div class="figure"><a name="ObjectInspector"></a><p class="title"><b>Figure 2.10. Object Inspector</b></p><div class="mediaobject"><img src="tut_instancevar.png" alt="Object Inspector"></div></div><p>
+You can also invoke methods on an object directly in the Object Inspector.
+Select the <span class="emphasis"><em>emergencyBreak</em></span> method and choose menu 
+<span class="guimenu">Method</span>-&gt;<span class="guimenuitem">Invoke</span>.
+
+</p><div class="figure"><a name="ObjectInspectorMethods"></a><p class="title"><b>Figure 2.11. Methods in Object Inspector</b></p><div class="mediaobject"><img src="tut_instancemethod.png" alt="Methods in Object Inspector"></div></div><p>
+
+You can also specify which methods you should see - only those from 
+<span class="emphasis"><em>Railroad</em></span> or also those inherited from other Objects or Superclasses.
+You can even see the mixin methods available on the object.
+</p></div><div class="footnotes"><br><hr width="100" align="left"><div class="footnote"><p><sup>[<a name="ftn.id2979973" href="#id2979973">1</a>] </sup>
+Example by Richard Suchenwirth translated from Tcl to XOTcl by Gustaf Neumann and modified by me. First published on tclwiki.
+</p></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch02.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="ch02.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ch03.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter 2. Getting Started Tutorial </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Chapter 3. Programming with XOTclIDE</td></tr></table></div></body></html>

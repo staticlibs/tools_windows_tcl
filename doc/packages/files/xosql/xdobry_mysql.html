@@ -1,0 +1,57 @@
+<html>
+<title>xdobry::mysql</title>
+<body>
+<a href="index.html">Contents</a><hr>
+<h2>Component xdobry::mysql</h2>
+<b>comment:</b><pre>XOTcl API for mysqltcl based on mysqltcl (www.xdobry.de/mysqltcl)</pre>
+Classes <ul>
+<li><a href="#class_MySql">MySql</a></li>
+<li><a href="#class_MySql::SqlQuerry">MySql::SqlQuerry</a></li>
+</ul> 
+Classes Hierarchy <ul>
+<li><a href="#class_MySql">MySql</a></li><li><a href="#class_MySql::SqlQuerry">MySql::SqlQuerry</a></li></ul>
+
+<hr>
+<a name="class_MySql">
+<h3>Class MySql</h3>
+parameter: 
+    user
+    password
+    hostname
+    socket
+    {interface mysql}
+<br>
+<b>superclasses:</b>
+<a href="xdobry_sql.html#class_Sqlinterface">Sqlinterface</a>
+</br><b>comment:</b><pre>Interfaceclass for mysqltcl base interface</pre><p>
+<hr>
+<a name="class_MySql::SqlQuerry">
+<h3>Class MySql::SqlQuerry</h3>
+parameter: 
+    {qhandle 0}
+    {frows 0}
+<br>
+Instprocs:<dl>
+<dt><b>columnNames</b> {}</dt>
+<dd>Return the name of columns in the query.
+Warning! This method are not supported by all interfaces</dd>
+<dt><b>fetch</b> {}</dt>
+<dd>fetch next row and return it as list.
+Warning!
+The result is always a list.
+If the reusult has only one column that it is list with only
+one element at should be accessed with lindex $row 0</dd>
+<dt><b>rows</b> {}</dt>
+<dd>Return the total number of rown in the result
+Warning! fetch does not decrease this number</dd>
+<dt><b>seek</b> {point}</dt>
+<dd>Can set the cursor in result object.
+Warning! not all interfaces supports this method</dd>
+</dl>
+<hr>
+
+
+
+</body>
+</html>
+

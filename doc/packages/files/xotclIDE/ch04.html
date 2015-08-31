@@ -1,0 +1,129 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter 4. Extended Features</title><meta name="generator" content="DocBook XSL Stylesheets V1.68.1"><link rel="start" href="index.html" title="XOTclIDE User Guide"><link rel="up" href="index.html" title="XOTclIDE User Guide"><link rel="prev" href="ch03s05.html" title="Source Editing"><link rel="next" href="ch04s02.html" title="Syntax Checking"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter 4. Extended Features</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch03s05.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ch04s02.html">Next</a></td></tr></table><hr></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="extfutures"></a>Chapter 4. Extended Features</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="ch04.html#versionControl">Version Control System</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch04.html#id2982694">Benefits of Version Control</a></span></dt><dt><span class="sect2"><a href="ch04.html#id2982744">Base Characteristics</a></span></dt><dt><span class="sect2"><a href="ch04.html#id2982799">Principle</a></span></dt><dt><span class="sect2"><a href="ch04.html#id2982861">Database Schema of Version System</a></span></dt><dt><span class="sect2"><a href="ch04.html#id2982930">Definitions (Editions,Versions)</a></span></dt><dt><span class="sect2"><a href="ch04.html#id2982952">Using Version System, Main Functions</a></span></dt><dt><span class="sect2"><a href="ch04.html#id2983054">Changes Browser</a></span></dt><dt><span class="sect2"><a href="ch04.html#id2983118">Component Loader</a></span></dt><dt><span class="sect2"><a href="ch04.html#installVC">Installing Version Control System</a></span></dt></dl></dd><dt><span class="sect1"><a href="ch04s02.html">Syntax Checking</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch04s02.html#id2983302">Reason for syntax checking in Tcl/XOTcl</a></span></dt><dt><span class="sect2"><a href="ch04s02.html#id2983320">Syntax checker implementation</a></span></dt><dt><span class="sect2"><a href="ch04s02.html#id2983402">Example Tcl procedures</a></span></dt><dt><span class="sect2"><a href="ch04s02.html#id2983432">Example XOTcl methods</a></span></dt><dt><span class="sect2"><a href="ch04s02.html#id2983453">Syntax Checking while editing</a></span></dt><dt><span class="sect2"><a href="ch04s02.html#id2983558">Syntax Checker Browser</a></span></dt><dt><span class="sect2"><a href="ch04s02.html#id2983638">Tcl/XOTcl Parser</a></span></dt><dt><span class="sect2"><a href="ch04s02.html#id2983682">How to extend syntax interpretation</a></span></dt><dt><span class="sect2"><a href="ch04s02.html#id2983708">Problems</a></span></dt><dt><span class="sect2"><a href="ch04s02.html#id2983728">Magic strings for checker</a></span></dt><dt><span class="sect2"><a href="ch04s02.html#id2983758">Checking Referenced Object Calls</a></span></dt></dl></dd><dt><span class="sect1"><a href="ch04s03.html">Configurations Management</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch04s03.html#id2983838">Main Features</a></span></dt><dt><span class="sect2"><a href="ch04s03.html#id2983920">Configuration Map - Without Version Control System</a></span></dt><dt><span class="sect2"><a href="ch04s03.html#id2983987">Using Configurations Maps</a></span></dt><dt><span class="sect2"><a href="ch04s03.html#id2984140">Deploying Application</a></span></dt><dt><span class="sect2"><a href="ch04s03.html#id2984213">Configuration Browser - with Version Control System</a></span></dt></dl></dd><dt><span class="sect1"><a href="ch04s04.html">Debugging</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch04s04.html#id2984384">Debugger Browser</a></span></dt><dt><span class="sect2"><a href="ch04s04.html#id2984447">Stack Error Browser</a></span></dt><dt><span class="sect2"><a href="ch04s04.html#id2984503">Tracker Browser</a></span></dt><dt><span class="sect2"><a href="ch04s04.html#vartracker">Variable access tracking and watching</a></span></dt></dl></dd><dt><span class="sect1"><a href="ch04s05.html">Importing Tcl Projects into XOTclIDE Components</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch04s05.html#id2984687">Importing by definition tracking</a></span></dt><dt><span class="sect2"><a href="ch04s05.html#id2984990">Importing by System Introspection</a></span></dt><dt><span class="sect2"><a href="ch04s05.html#importingTclComments">Importing Tcl comments</a></span></dt><dt><span class="sect2"><a href="ch04s05.html#id2985168">Plug-ins Architecture</a></span></dt></dl></dd></dl></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="versionControl"></a>Version Control System</h2></div></div></div><p>
+As soon as you develop more than 
+
+“<span class="quote">Hallo World</span>” programs you need a version control system.
+You need it to save and archive your code and follow the code changes.
+Version Control gives you a guarantee of returning to a former code state so you can experiment with your code.
+Version control is an implicit requirement for many extreme programming practices.
+In XOTclIDE all code changes are updated in version control immediately so you need not worry about saving your source.
+The Version Control System is also a code repository that can be centralized for many developers.
+Components can be loaded and executed directly from the version control repository without the need to save them as files in a file system.
+</p><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2982694"></a>Benefits of Version Control</h3></div></div></div><p>
+</p><div class="itemizedlist"><ul type="disc"><li><p>database oriented - all information is stored in database</p></li><li><p>central code repository - no file copying</p></li><li><p>suitable for big projects - able to browse in thousands of lines of code</p></li><li><p>multiuser capable</p></li><li><p>flexible as XOTcl - no locks, no commit, developed specially for object oriented languages like XOTcl.</p></li></ul></div><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2982744"></a>Base Characteristics</h3></div></div></div><p>
+</p><div class="itemizedlist"><ul type="disc"><li><p>based on relational database (currently mysql, postgres, sqlite or odbc)</p></li><li><p>XOTcl programs are stored and managed corresponding to their structure.
+(Components, Classes/Objects, Methods).</p></li><li><p>Every change in your system is stored on the fly.
+You need not ask the system to update the structures.</p></li><li><p>If you add or modify any method, a new row is inserted into the database.
+The old method version is normally not deleted.
+You can always return to every state in the past (no comment and uncomment of code pieces).</p></li><li><p>Stores not only sources but also additional data as documentation, comments, meta data.</p></li></ul></div><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2982799"></a>Principle</h3></div></div></div><p>
+</p><div class="figure"><a name="versionSystem"></a><p class="title"><b>Figure 4.1. Version System Principle</b></p><div class="mediaobject"><img src="versionsystem.png" alt="Version System Principle"></div></div><p>
+
+XOTclIDE Programs are structured in Components (a concept specific to XOTclIDE), Classes/Objects and Methods
+(see 
+<a href="ch03s03.html" title="Building an Application">the section called “Building an Application”</a>).
+All these structure elements are stored and managed separately in the database.
+A class can have many versions without having to store a complete class definition in a separate text file (as is usual in cvs if a class is one file) with many redundant copies even though only one method differs.
+Normally the programmer doesn't care about version control.
+He just develops.
+The version control uses so called optimistic locking.
+If the programmer thinks the state of a component or class is stable and ready to be marked he can
+
+“<span class="quote">version</span>” this component or class.
+After this he can return to this state or recognize changes among different versions.
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2982861"></a>Database Schema of Version System</h3></div></div></div><p>
+</p><div class="figure"><a name="VersionSystemER"></a><p class="title"><b>Figure 4.2. Version System ER Diagram</b></p><div class="mediaobject"><img src="versionsystem_er.png" alt="Version System ER Diagram"></div></div><p>
+
+There are m:n relationship between Components, Objects/Classes and Methods,
+meaning one method version can belong to m object-versions.
+This diagram does not include configuration maps.
+If you know this schema you can formulate queries on the repository directly in SQL.
+It is quite easy to find the newest methods or statistics about code development with simple SQL queries.
+</p><p>
+The object attribute 
+
+“<span class="quote">deforder</span>” specifies the order of loading Objects/Classes into an interpreter.
+</p><p>
+The ComponentRequire entity maps the requirements for a single component version.
+The information that a special component version needs a special version of another component is not stored.
+</p><p>
+Version info attributes are intended to store short text information for developer about the version and are not used to identify entities.
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2982930"></a>Definitions (Editions,Versions)</h3></div></div></div><p>
+An Edition is a piece you can work on.
+There are Component, Object and Method editions.
+Editions can be changed.
+Methods can only have editions.
+</p><p>
+Versions are frozen editions which means they cannot be modified.
+A single class version always has the same methods.
+To freeze an edition you have to version it.
+To modify a versioned class you must open a new edition of
+the class.
+This new class edition is based on the last version of the class.
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2982952"></a>Using Version System, Main Functions</h3></div></div></div><p>
+The following functions are available on the menu for most structure items (Components, Objects, Methods).
+
+
+</p><div class="itemizedlist"><ul type="disc"><li><p>Available - Show all items in database.
+All Components, all objects, and all methods that belong to the selected object.
+You can choose a edition and load it into the system so you can find and reload the methods you have deleted.</p></li><li><p>Editions - show all editions of currently selected item (Component, Object, Method). You can load your chosen version into the system.</p></li><li><p>Changes - start the Changes Browser to show changes compared to another edition in the database.</p></li><li><p>Load Previous - you can return to a previous edition.
+For methods you can simply discard the latest changes.</p></li><li><p>Version - Freeze current selected edition.
+(cvs tag or labels) You can version only components and classes/objects.
+(It makes no sense for methods).
+You can always return to this state of the class or component.</p></li><li><p>New Edition - to develop a versioned edition you must make a new edition.
+The system makes a working copy of a version.</p></li><li><p>Version Info - Show a small info dialog.
+You can specify the version string which can be 30 characters long.
+The first number will be automatically incremented by opening a new edition.
+This number is used as version number for Tcl packages.</p></li></ul></div><p>
+
+The functions below are available only for components:
+
+
+</p><div class="itemizedlist"><ul type="disc"><li><p>Import - Install a package into repository. Probably loaded per load package by package require into database.</p></li><li><p>Requirements - Show and edit the required components for a selected component.
+The requirements are set automatically.
+Normally you do not need to change them.</p></li></ul></div><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2983054"></a>Changes Browser</h3></div></div></div><p>
+You can see the differences between this version and another version.
+It is <span><strong class="command">diff</strong></span> command 
+
+for XOTclIDE. In figure 
+<a href="ch04.html#changesBrowser" title="Figure 4.3. Changes Browser">Figure 4.3, “Changes Browser”</a> we can see the changes between class versions of class 
+
+<code class="classname">IDECore</code>.
+In the method list are shown all instance methods with differences. Since the method 
+
+<code class="methodname">rekBuildDefList</code> is selected in the text area we can see (yellow selection) the exact differences.
+
+
+</p><div class="figure"><a name="changesBrowser"></a><p class="title"><b>Figure 4.3. Changes Browser</b></p><div class="mediaobject"><img src="changes.png" alt="Changes Browser"></div></div><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2983118"></a>Component Loader</h3></div></div></div><p>
+You can execute programs directly by loading them from the Version Control System.
+It is not necessary to deploy your application as a set of files.
+This makes the management of many client systems very easy but
+the loading time can increase.
+
+
+<span><strong class="command">CompLoader.tcl</strong></span> is a small independent script that can connect to repository, load the components specified by a configuration map and execute them.
+</p><p>
+Usage: CompLoader.tcl [-nodialog] {-ignoreprefs] {-nosynchronize] [-help] [-preferences list]
+
+
+</p><div class="variablelist"><dl><dt><span class="term">-ignoreprefs</span></dt><dd><p>do not read preferences</p></dd><dt><span class="term">-nosynchronize</span></dt><dd><p>no IDE self developing mode</p></dd><dt><span class="term">-nodialog</span></dt><dd><p>no user interaction while connecting to db</p></dd><dt><span class="term">-preferences string</span></dt><dd><p>overwrite preferences (use keyed list)</p></dd><dt><span class="term">-help</span></dt><dd><p>show all options</p></dd></dl></div><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="installVC"></a>Installing Version Control System</h3></div></div></div><p>
+XOTclIDE supports the following databases as repository
+
+
+</p><div class="itemizedlist"><ul type="disc"><li><p>mysql</p></li><li><p>postgres</p></li><li><p>odbc</p></li><li><p>sqlite</p></li></ul></div><p>
+The Tclkit distribution (Starpack) comes with sqlite.
+I recommend using mysql because it is my primary developing system and the best tested.
+</p><p>
+To get version control on a Linux system you must:
+
+
+</p><div class="itemizedlist"><ul type="disc"><li><p>Install mysql database.
+I recommend using RPM packages for your distribution.</p></li><li><p>Install mysqltcl extension to access mysql from tcl.
+To compile it yourself you need header files for mysql database (for redhat the package mysql-devel). There are also RPMs for Linux available on the mysqltcl site.</p></li><li><p>Run the installer tool installVC.tcl. It can check the database connection, specify the connect parameter, install tables and copy components to repository.
+Then you can start XotclIDE with XotclIDEDB or XotclIDEFromDB.
+The first connects to the database after loading itself using package require.
+XotclIDEFromDB tries to load the entire application from DB.</p></li></ul></div><p>
+</p></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch03s05.html">Prev</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="ch04s02.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Source Editing </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Syntax Checking</td></tr></table></div></body></html>

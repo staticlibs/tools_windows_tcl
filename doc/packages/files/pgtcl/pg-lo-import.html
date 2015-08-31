@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" /><title>pg_lo_import</title><link rel="stylesheet" href="stylesheet.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.70.1" /><link rel="start" href="index.html" title="Pgtcl Reference Manual" /><link rel="up" href="pgtcl-ref-largeobj.html" title="4.6. Large Object Processing Commands" /><link rel="prev" href="pg-lo-unlink.html" title="pg_lo_unlink" /><link rel="next" href="pg-lo-export.html" title="pg_lo_export" /><link rel="copyright" href="ln-legalnotice.html" title="Legal Notice" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">pg_lo_import</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="pg-lo-unlink.html">Prev</a> </td><th width="60%" align="center">4.6. Large Object Processing Commands</th><td width="20%" align="right"> <a accesskey="n" href="pg-lo-export.html">Next</a></td></tr></table><hr /></div><div class="refentry" lang="en" xml:lang="en"><a id="pg-lo-import"></a><div class="titlepage"></div><div class="refnamediv"><h2><span class="refentrytitle">pg_lo_import</span></h2><p>pg_lo_import &#8212; Import a large object from a file</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><pre class="synopsis">
+pg_lo_import <em class="parameter"><code>conn</code></em> <em class="parameter"><code>filename</code></em>
+</pre></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2572554"></a><h2>Description</h2><p>
+      <code class="function">pg_lo_import</code> reads the specified file and
+      places the contents into a new large object.
+    </p></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2572570"></a><h2>Arguments</h2><div class="variablelist"><dl><dt><span class="term"><em class="replaceable"><code>conn</code></em></span></dt><dd><p>
+            The handle of the connection.
+          </p></dd><dt><span class="term"><em class="replaceable"><code>filename</code></em></span></dt><dd><p>
+            Specified the file from which to import the data.
+          </p></dd></dl></div></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2572610"></a><h2>Return Value</h2><p>
+      The OID of the large object created.
+    </p><p>
+      A Tcl error will be thrown if an error occurs.
+    </p></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2572625"></a><h2>Notes</h2><p>
+      All large object manipulation must take place within an SQL transaction
+      block.
+    </p><p>
+      This command uses or emulates the PostgreSQL
+      <span class="application">libpq</span>
+      function <code class="function">lo_import</code>.
+    </p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="pg-lo-unlink.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="pgtcl-ref-largeobj.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="pg-lo-export.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">pg_lo_unlink </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> pg_lo_export</td></tr></table></div></body></html>

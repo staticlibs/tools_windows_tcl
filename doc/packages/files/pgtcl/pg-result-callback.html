@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" /><title>pg_result_callback</title><link rel="stylesheet" href="stylesheet.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.70.1" /><link rel="start" href="index.html" title="Pgtcl Reference Manual" /><link rel="up" href="pgtcl-ref-async.html" title="4.4. Asynchronous Query Processing Commands" /><link rel="prev" href="pg-blocking.html" title="pg_blocking" /><link rel="next" href="pgtcl-ref-notif.html" title="4.5. Notification and Notice Processing Commands" /><link rel="copyright" href="ln-legalnotice.html" title="Legal Notice" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">pg_result_callback</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="pg-blocking.html">Prev</a> </td><th width="60%" align="center">4.4. Asynchronous Query Processing Commands</th><td width="20%" align="right"> <a accesskey="n" href="pgtcl-ref-notif.html">Next</a></td></tr></table><hr /></div><div class="refentry" lang="en" xml:lang="en"><a id="pg-result-callback"></a><div class="titlepage"></div><div class="refnamediv"><h2><span class="refentrytitle">pg_result_callback</span></h2><p>pg_result_callback &#8212; Set a callback for asynchronous SQL command result availability</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><pre class="synopsis">
+pg_result_callback <em class="parameter"><code>conn</code></em> ?<span class="optional"><em class="parameter"><code>callbackCommand</code></em></span>?
+</pre></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2570319"></a><h2>Description</h2><p>
+<code class="function">pg_result_callback</code> creates, changes, or cancels a
+request to execute a callback command when the result of an asynchronous
+query is ready.
+With a <em class="replaceable"><code>callbackCommand</code></em> parameter, the callback
+command is established or an existing callback command is replaced.
+With no <em class="replaceable"><code>callbackCommand</code></em> parameter, any existing
+callback command is canceled.
+    </p><p>
+To use event-driven asynchronous queries, first establish a callback
+command with <code class="function">pg_result_callback</code>, then issue a
+command with <a href="pg-sendquery.html" title="pg_sendquery"><span class="refentrytitle">pg_sendquery</span></a>,
+<a href="pg-sendquery-prepared.html" title="pg_sendquery_prepared"><span class="refentrytitle">pg_sendquery_prepared</span></a>,
+or <a href="pg-sendquery-params.html" title="pg_sendquery_params"><span class="refentrytitle">pg_sendquery_params</span></a>.
+The Tcl/Tk application can then continue processing while the query is
+executing, without blocking or busy-waiting for the result. For example,
+a Tk application can continue to respond to user-interface events.
+Or, a Tcl application can simultaneously wait for a query result or a
+network socket input ready condition.
+When the query result is available, the Tcl/Tk event system will
+execute the callback command.
+    </p><p>
+The callback command string is executed from the Tcl idle loop.
+That is the normal idle state of an application written with Tk.
+In non-Tk Tcl shells, you can execute <code class="function">update</code>
+or <code class="function">vwait</code> to cause the idle loop to be entered.
+    </p></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2570391"></a><h2>Arguments</h2><div class="variablelist"><dl><dt><span class="term"><em class="replaceable"><code>conn</code></em></span></dt><dd><p>
+            The handle of the connection on which to establish the callback.
+          </p></dd><dt><span class="term"><em class="replaceable"><code>callbackCommand</code></em></span></dt><dd><p>
+            If present, provides the command string to execute when
+            an asynchronous query result is ready. If absent, an existing
+            asynchronous query result callback command is canceled.
+          </p></dd></dl></div></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2570434"></a><h2>Return Value</h2><p>
+      Nothing. Throws a Tcl error if an error occurs.
+    </p></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2570444"></a><h2>Notes</h2><p>
+An established callback command will be automatically removed when
+any of the following occurs:
+      </p><div class="itemizedlist"><ul type="disc"><li><p>
+            The callbackCommand executes because a result is ready.
+          </p></li><li><p>
+            <a href="pg-getresult.html" title="pg_getresult"><span class="refentrytitle">pg_getresult</span></a> is called, which blocks until a
+            result is ready.
+          </p></li><li><p>
+            <a href="pg-cancelrequest.html" title="pg_cancelrequest"><span class="refentrytitle">pg_cancelrequest</span></a> is called, canceling the
+            asynchronous query.
+          </p></li><li><p>
+            The connection to the PostgreSQL server is closed.
+          </p></li><li><p>
+            <code class="function">pg_result_callback</code> is called - without
+            a callbackCommand, to remove the callback, or with a new
+            callbackCommand to replace the existing callback.
+          </p></li></ul></div><p>
+    </p><p>
+      While an asynchronous query callback command is in place, synchronous
+      query commands (pg_exec, pg_select, etc.) are not allowed and will
+      throw a Tcl error.
+    </p><p>
+      This command was added in <span class="application">pgtclng-1.6.0</span>.
+      It is not available in <span class="application">pgintcl</span>.
+      This feature was suggested by Kyle Bateman (kyleb), with the initial
+      implementation designed and written by Miguel Sofer (msofer).
+    </p><p>
+      See <a href="pgtcl-example-asyncevent.html" title="5.12. Example - Asynchronous Query with Event-Driven Results">Section 5.12, &#8220;Example - Asynchronous Query with Event-Driven Results&#8221;</a> for an example.
+    </p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="pg-blocking.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="pgtcl-ref-async.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="pgtcl-ref-notif.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">pg_blocking </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 4.5. Notification and Notice Processing Commands</td></tr></table></div></body></html>

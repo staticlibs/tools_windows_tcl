@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" /><title>pg_parameter_status</title><link rel="stylesheet" href="stylesheet.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.70.1" /><link rel="start" href="index.html" title="Pgtcl Reference Manual" /><link rel="up" href="pgtcl-ref-connstatus.html" title="4.2. Connection Status Commands" /><link rel="prev" href="pg-transaction-status.html" title="pg_transaction_status" /><link rel="next" href="pgtcl-ref-query.html" title="4.3. Query Execution Commands" /><link rel="copyright" href="ln-legalnotice.html" title="Legal Notice" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">pg_parameter_status</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="pg-transaction-status.html">Prev</a> </td><th width="60%" align="center">4.2. Connection Status Commands</th><td width="20%" align="right"> <a accesskey="n" href="pgtcl-ref-query.html">Next</a></td></tr></table><hr /></div><div class="refentry" lang="en" xml:lang="en"><a id="pg-parameter-status"></a><div class="titlepage"></div><div class="refnamediv"><h2><span class="refentrytitle">pg_parameter_status</span></h2><p>pg_parameter_status &#8212; Get the value of a parameter from the database server</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><pre class="synopsis">
+pg_parameter_status <em class="parameter"><code>conn</code></em> <em class="parameter"><code>paramName</code></em>
+</pre></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2564551"></a><h2>Description</h2><p>
+<code class="function">pg_parameter_status</code> returns the value of a
+PostgreSQL parameter as supplied by the server.
+Different releases of PostgreSQL may provide different parameters.
+As of PostgreSQL-8.1.4, the following parameters are available.
+    </p><div class="informaltable"><a id="pgtcl-parameters-table"></a><table border="1"><colgroup><col /><col /><col /></colgroup><thead><tr><th>Parameter</th><th>Description</th><th>Example Value</th></tr></thead><tbody><tr><td>client_encoding</td><td>Client's character set encoding</td><td>SQL_ASCII</td></tr><tr><td>DateStyle</td><td>Display format and rules for ambiguous date/time values</td><td>ISO, MDY </td></tr><tr><td>integer_datetimes</td><td>Date/times are integer based</td><td>off</td></tr><tr><td>is_superuser</td><td>Has superuser rights?</td><td>off</td></tr><tr><td>standard_conforming_strings</td><td>Backslash \ is literal in quoted strings</td><td>off</td></tr><tr><td>server_encoding</td><td>Server (database) character set encoding</td><td>SQL_ASCII</td></tr><tr><td>server_version</td><td>PostgreSQL server version</td><td>8.1.4</td></tr><tr><td>session_authorization</td><td>Username</td><td>guest</td></tr><tr><td>TimeZone</td><td>Time zone for displaying and interpreting time stamps</td><td>EST5EDT</td></tr></tbody></table></div></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2564719"></a><h2>Arguments</h2><div class="variablelist"><dl><dt><span class="term"><em class="replaceable"><code>conn</code></em></span></dt><dd><p>
+            The handle of the connection.
+          </p></dd><dt><span class="term"><em class="replaceable"><code>paramName</code></em></span></dt><dd><p>
+            The name of the parameter to get. See above list.
+          </p></dd></dl></div></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2564759"></a><h2>Return Value</h2><p>
+       The value of the parameter, or an empty string if no such parameter was
+       supplied by the database.
+    </p></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2564770"></a><h2>Notes</h2><p>
+      This command does not contact the database server. Parameters are
+      supplied by the server at connection time (or possibly later) and
+      saved by the interface until needed.
+    </p><p>
+      This command uses or emulates the PostgreSQL
+      <span class="application">libpq</span>
+      function <code class="function">PQparameterStatus</code>.
+    </p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="pg-transaction-status.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="pgtcl-ref-connstatus.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="pgtcl-ref-query.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">pg_transaction_status </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 4.3. Query Execution Commands</td></tr></table></div></body></html>

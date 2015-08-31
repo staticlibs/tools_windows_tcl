@@ -1,0 +1,214 @@
+
+<html><head>
+<title>quoted-printable - Trf transformer commands</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.toc,UL.toc UL, UL.toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.section, LI.subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.requirements LI, UL.syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<! -- Generated from file 'quoted-printable.man' by tcllib/doctools with format 'html'
+   -->
+<! -- Copyright &copy; 1996-2003, Andreas Kupries &lt;andreas_kupries@users.sourceforge.net&gt;
+   -->
+<! -- CVS: $Id$ quoted-printable.n
+   -->
+<body><div class="doctools">
+<h1 class="title">quoted-printable(n) 2.1.3  &quot;Trf transformer commands&quot;</h1>
+<div id="name" class="section"><h2><a name="name">Name</a></h2>
+<p>quoted-printable - Encoding &quot;quoted-printable&quot;</p>
+</div>
+<div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="toc">
+<li class="section"><a href="#toc">Table Of Contents</a></li>
+<li class="section"><a href="#synopsis">Synopsis</a></li>
+<li class="section"><a href="#section1">Description</a></li>
+<li class="section"><a href="#section2">IMMEDIATE versus ATTACHED</a></li>
+<li class="section"><a href="#see-also">See Also</a></li>
+<li class="section"><a href="#keywords">Keywords</a></li>
+<li class="section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="synopsis">
+<ul class="requirements">
+<li>package require <b class="pkgname">Tcl <span class="opt">?8.2?</span></b></li>
+<li>package require <b class="pkgname">Trf <span class="opt">?2.1.3?</span></b></li>
+</ul>
+<ul class="syntax">
+<li><a href="#1"><b class="cmd">quoted-printable</b> <span class="opt">?<i class="arg">options...</i>?</span> <span class="opt">?<i class="arg">data</i>?</span></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="section"><h2><a name="section1">Description</a></h2>
+<p>The command <b class="cmd">quoted-printable</b> is one of several data encodings
+provided by the package <b class="package">trf</b>. See <b class="syscmd">trf-intro</b> for an
+overview of the whole package.</p>
+<p>Printable ASCII characters are largely untouched. Otherwise a
+three-character encoding sequence is used. This is MIME's compromise
+encoding.
+See RFC 2045 (<a href="http://www.rfc-editor.org/rfc/rfc2045.txt">http://www.rfc-editor.org/rfc/rfc2045.txt</a>) for its
+definition.</p>
+<dl class="definitions">
+<dt><a name="1"><b class="cmd">quoted-printable</b> <span class="opt">?<i class="arg">options...</i>?</span> <span class="opt">?<i class="arg">data</i>?</span></a></dt>
+<dd><dl class="definitions">
+<dt><b class="option">-mode</b> <b class="const">encode</b>|<b class="const">decode</b></dt>
+<dd><p>This option has to be present and is always understood by the
+encoding.</p>
+<p>For <i class="term">immediate</i> mode the argument value specifies the operation
+to use.  For an <i class="term">attached</i> encoding it specifies the operation to
+use for <em>writing</em>. Reading will automatically use the reverse
+operation.
+See section <span class="sectref"><a href="#section2">IMMEDIATE versus ATTACHED</a></span> for explanations of
+these two terms.</p>
+<p>Beyond the argument values listed above all unique abbreviations are
+recognized too.</p>
+<p><b class="const">Encode</b> converts from arbitrary (most likely binary) data into
+the described representation, <b class="const">decode</b> does the reverse .</p></dd>
+<dt><b class="option">-attach</b> <i class="arg">channel</i></dt>
+<dd><p>The presence/absence of this option determines the main operation mode
+of the transformation.</p>
+<p>If present the transformation will be stacked onto the <i class="arg">channel</i>
+whose handle was given to the option and run in <i class="term">attached</i>
+mode. More about this in section <span class="sectref"><a href="#section2">IMMEDIATE versus ATTACHED</a></span>.</p>
+<p>If the option is absent the transformation is used in <i class="term">immediate</i>
+mode and the options listed below are recognized. More about this in
+section <span class="sectref"><a href="#section2">IMMEDIATE versus ATTACHED</a></span>.</p></dd>
+<dt><b class="option">-in</b> <i class="arg">channel</i></dt>
+<dd><p>This options is legal if and only if the transformation is used in
+<i class="term">immediate</i> mode. It provides the handle of the channel the data
+to transform has to be read from.</p>
+<p>If the transformation is in <i class="term">immediate</i> mode and this option is
+absent the data to transform is expected as the last argument to the
+transformation.</p></dd>
+<dt><b class="option">-out</b> <i class="arg">channel</i></dt>
+<dd><p>This options is legal if and only if the transformation is used in
+<i class="term">immediate</i> mode. It provides the handle of the channel the
+generated transformation result is written to.</p>
+<p>If the transformation is in <i class="term">immediate</i> mode and this option is
+absent the generated data is returned as the result of the command
+itself.</p></dd>
+</dl></dd>
+</dl>
+</div>
+<div id="section2" class="section"><h2><a name="section2">IMMEDIATE versus ATTACHED</a></h2>
+<p>The transformation distinguishes between two main ways of using
+it. These are the <i class="term">immediate</i> and <i class="term">attached</i> operation
+modes.</p>
+<p>For the <i class="term">attached</i> mode the option <b class="option">-attach</b> is used to
+associate the transformation with an existing channel. During the
+execution of the command no transformation is performed, instead the
+channel is changed in such a way, that from then on all data written
+to or read from it passes through the transformation and is modified
+by it according to the definition above.
+This attachment can be revoked by executing the command <b class="cmd">unstack</b>
+for the chosen channel. This is the only way to do this at the Tcl
+level.</p>
+<p>In the second mode, which can be detected by the absence of option
+<b class="option">-attach</b>, the transformation immediately takes data from
+either its commandline or a channel, transforms it, and returns the
+result either as result of the command, or writes it into a channel.
+The mode is named after the immediate nature of its execution.</p>
+<p>Where the data is taken from, and delivered to, is governed by the
+presence and absence of the options <b class="option">-in</b> and <b class="option">-out</b>.
+It should be noted that this ability to immediately read from and/or
+write to a channel is an historic artifact which was introduced at the
+beginning of Trf's life when Tcl version 7.6 was current as this and
+earlier versions have trouble to deal with \0 characters embedded into
+either input or output.</p>
+</div>
+<div id="see-also" class="section"><h2><a name="see-also">See Also</a></h2>
+<p>ascii85, base64, bin, hex, oct, otp_words, quoted-printable, trf-intro, uuencode</p>
+</div>
+<div id="keywords" class="section"><h2><a name="keywords">Keywords</a></h2>
+<p>encoding, mime, quoted-printable, rfc 2045</p>
+</div>
+<div id="copyright" class="section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 1996-2003, Andreas Kupries &lt;andreas_kupries@users.sourceforge.net&gt;</p>
+</div>
+</div></body></html>

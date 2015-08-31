@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" /><title>2.2. Building and Installing on Windows Systems (Borland Compiler)</title><link rel="stylesheet" href="stylesheet.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.70.1" /><link rel="start" href="index.html" title="Pgtcl Reference Manual" /><link rel="up" href="pgtcl-make.html" title="Chapter 2. Building and Installing pgtcl-ng" /><link rel="prev" href="pgtcl-make.html" title="Chapter 2. Building and Installing pgtcl-ng" /><link rel="next" href="pgtcl-make-macos.html" title="2.3. Building and Installing on MacOS 10" /><link rel="copyright" href="ln-legalnotice.html" title="Legal Notice" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">2.2. Building and Installing on Windows Systems (Borland Compiler)</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="pgtcl-make.html">Prev</a> </td><th width="60%" align="center">Chapter 2. Building and Installing <span class="application">pgtcl-ng</span></th><td width="20%" align="right"> <a accesskey="n" href="pgtcl-make-macos.html">Next</a></td></tr></table><hr /></div><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="pgtcl-make-win"></a>2.2. Building and Installing on Windows Systems (Borland Compiler)</h2></div></div></div><div class="abstract"><p class="title"><b>Abstract</b></p><p>
+This section describes how to build and install
+<span class="application">pgtcl-ng</span> on Windows systems.
+Building on Windows systems is less automated than on Unix-like systems,
+and you are advised to fetch a binary release instead of building it
+yourself. If you get a binary release, follow the instructions in the
+release to install it. Installation generally just involves copying two DLL
+files.  If you want to compile your
+own <span class="application">pgtcl-ng</span>, read the following sections.
+  </p></div><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="pgtcl-make-win-prereq"></a>2.2.1. Prerequisites for Windows Systems</h3></div></div></div><p>
+Here are the prerequisites for building pgtcl-ng
+on Windows.
+Note that specific versions of each product are mentioned. Newer versions
+will probably work, and older versions are less likely to work.
+The versions listed here have been tested.
+  </p><p>
+To build <span class="application">pgtcl-ng</span> on Windows, you need:
+  </p><div class="itemizedlist"><ul type="disc"><li><p>
+<a href="http://www.activestate.com" target="_top">ActiveState</a>
+ActiveTcl Tcl/Tk version 8.4.5, installed with
+libraries and header files;
+    </p></li><li><p>
+<a href="http://www.borland.com" target="_top">Borland</a>
+C++ Builder Command Line Tools (BCC32 5.5.1),
+installed and configured;
+    </p></li><li><p>
+<a href="http://www.postgresql.org" target="_top">PostgreSQL</a>
+7.4.1 source release or higher, unpacked. You cannot use any release
+before 7.4.1.
+    </p></li></ul></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+You can probably build this with Microsoft's C compiler, but we don't
+have one and don't know how to do it.
+  </p></div></div><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="pgtcl-make-win-make"></a>2.2.2. Building and Installing - Windows Systems</h3></div></div></div><p>
+Following the instructions below, you will first build the the PostgreSQL
+<code class="filename">libpq</code> loadable library.  Then you will build the
+<span class="application">pgtcl-ng</span> loadable library
+<code class="filename">libpgtcl</code>, and link it with ActiveState Tcl libraries.
+(Even though ActiveState libraries are built with Microsoft C, they can be
+linked with Borland C programs, with one extra step. However, you cannot
+use the Tcl stubs interface.)
+</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+For some versions of PostgreSQL, changes or patches need to be applied to
+the source in order to build <span class="application">libpq</span> using
+the Borland compiler. Changes or patches for tested releases can be found
+in the <span class="application">pgtcl-ng</span> source release (1.6.0 or higher)
+in the <code class="filename">patches/</code> subdirectory. Refer to the
+<code class="filename">README</code> file in that directory, and apply the relevant
+changes, before continuing with the instructions in this document.
+  </p></div><p>
+Here are the steps to build <span class="application">pgtcl-ng</span> on Windows.
+You will be working mostly in a Command Prompt window. (The prompt
+is shown below as <code class="prompt">C:\&gt;</code> but your prompt will vary.)
+</p><p>
+The steps below assume your Borland compiler is installed at
+<code class="filename">c:\apps\bcc</code>,
+ActiveState Tcl is installed at
+<code class="filename">c:\apps\tcl</code>,
+your PostgreSQL source is unpacked at
+<code class="filename">c:\src\pgsql</code>,
+and <span class="application">pgtcl-ng</span> is unpacked at
+<code class="filename">c:\src\pgtcl</code>.
+Adjust the pathnames shown below to match your actual installation.
+</p><div class="orderedlist"><ol type="1"><li><p>
+Create a Borland import library from the ActiveState Tcl link library.
+    </p><pre class="screen">
+<code class="prompt">C:\&gt;</code> <strong class="userinput"><code>cd c:\apps\tcl\lib</code></strong>
+<code class="prompt">C:\&gt;</code> <strong class="userinput"><code>coff2omf tcl84.lib tcl84omf.lib</code></strong>
+</pre></li><li><p>
+Build the <span class="application">libpq</span> loadable library,
+<code class="filename">blibpq.dll</code>.
+      </p><div class="orderedlist"><ol type="a"><li><p>
+In <code class="filename">c:\src\pgsql\src\include</code>, copy the file
+<code class="filename">pg_config.h.win32</code> to <code class="filename">pg_config.h</code>,
+overwriting the existing file, as shown.
+</p><pre class="screen">
+<code class="prompt">C:\&gt; </code> <strong class="userinput"><code>cd c:\src\pgsql\src\include</code></strong>
+<code class="prompt">C:\&gt; </code> <strong class="userinput"><code>copy pg_config.h.win32 pg_config.h</code></strong>
+</pre></li><li><p>
+If you are running <span class="application">PostgreSQL</span> 8.2.0 or higher, you
+need a <code class="filename">pg_config_os.h</code> file in the include directory.
+Copy this from the file <code class="filename">port\win32.h</code> as shown.
+</p><pre class="screen">
+<code class="prompt">C:\&gt; </code> <strong class="userinput"><code>cd c:\src\pgsql\src\include</code></strong>
+<code class="prompt">C:\&gt; </code> <strong class="userinput"><code>copy port\win32.h pg_config_os.h</code></strong>
+</pre></li><li><p>
+In the directory <code class="filename">c:\src\pgsql\src\interfaces\libpq</code>,
+edit the file <code class="filename">bcc32.mak</code> as follows:
+            </p><div class="orderedlist"><ol type="i"><li><p>
+Uncomment the line and define <code class="literal">BCB</code> to point to your Borland
+installation directory.
+(Although this isn't needed to compile programs with a proper
+<code class="literal">PATH</code>, it is needed for the resource compiler BRC32.)
+                </p></li><li><p>
+Change the link command run-time library from
+<code class="filename">cw32mti.lib</code> to the static version
+<code class="filename">cw32mt.lib</code>. This is necessary or applications
+using <code class="function">fprintf</code> will crash.
+                </p></li></ol></div><p>
+          </p></li><li><p>
+Build the <span class="application">libpq</span> library:
+          </p><pre class="screen">
+<code class="prompt">C:\&gt; </code> <strong class="userinput"><code>cd c:\src\pgsql\src\interfaces\libpq</code></strong>
+<code class="prompt">C:\&gt; </code> <strong class="userinput"><code>make -N -f bcc32.mak</code></strong>
+</pre><p>
+This will create the loadable library file
+<code class="filename">blibpq.dll</code>, and
+an import library <code class="filename">blibpqdll.lib</code>,
+in the <code class="filename">src\interfaces\libpq\Release</code> directory.
+You need these for the next step.
+          </p></li></ol></div><p>
+    </p></li><li><p>
+Build the <span class="application">pgtcl</span> loadable library, 
+<code class="filename">libpgtcl.dll</code>.
+Change directory to the unpacked <span class="application">pgtcl</span> source
+distribution. For example:
+    </p><pre class="screen">
+<code class="prompt">C:\&gt; </code> <strong class="userinput"><code>cd c:\src\pgtcl</code></strong>
+</pre><p>
+Edit the file <code class="filename">bcc32.mak</code> as follows:
+      </p><div class="orderedlist"><ol type="a"><li><p>
+Define <code class="literal">BORLAND</code> to point to the top of your Borland
+installation directory.
+          </p></li><li><p>
+Define <code class="literal">TCL</code> to point to the top of your Tcl installation
+directory.
+          </p></li><li><p>
+Define <code class="literal">POSTGRESQL</code> to point to the top-level source
+directory <code class="filename">src</code> inside your unpacked
+PostgreSQL distribution, where you have
+already built <span class="application">libpq</span>. For example:
+<code class="literal">POSTGRESQL=C:\src\pgsql\src</code>
+          </p></li></ol></div><p>
+    </p><p>
+Now build libpgtcl:
+    </p><pre class="screen">
+<code class="prompt">C:\&gt; </code> <strong class="userinput"><code>make -f bcc32.mak</code></strong>
+</pre><p>
+This will create the file <code class="filename">libpgtcl.dll</code>.
+    </p></li></ol></div><p>
+To use <span class="application">pgtcl</span> on Windows, you will need the
+two files you built:
+<code class="filename">c:\src\pgsql\src\interfaces\libpq\release\blibpq.dll</code>,
+and <code class="filename">c:\src\pgtcl\libpgtcl.dll</code>
+
+<span class="ifnotalone">
+Refer to <a href="pgtcl-loading.html" title="Chapter 3. Loading pgtcl into an Application">Chapter 3, <i>Loading <span class="application">pgtcl</span> into an Application</i></a> for information about using these
+from your application.
+</span>
+
+The Makefile contains an installation target you may choose to use:
+</p><pre class="screen">
+<code class="prompt">C:\&gt; </code> <strong class="userinput"><code>make -f bcc32.mak install</code></strong>
+</pre><p>
+This will install the two library files and a specially modified package
+loading script into a new package directory in your Tcl library directory.
+<span class="ifnotalone">
+See <a href="pgtcl-loading.html#pgtcl-load-package" title="3.1. Using the Tcl Package Command">Section 3.1, &#8220;Using the Tcl Package Command&#8221;</a> for more information.
+</span>
+</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="pgtcl-make.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="pgtcl-make.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="pgtcl-make-macos.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter 2. Building and Installing <span class="application">pgtcl-ng</span> </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 2.3. Building and Installing on MacOS 10</td></tr></table></div></body></html>

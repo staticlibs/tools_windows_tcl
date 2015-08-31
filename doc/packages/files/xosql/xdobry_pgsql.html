@@ -1,0 +1,49 @@
+<html>
+<title>xdobry::pgsql</title>
+<body>
+<a href="index.html">Contents</a><hr>
+<h2>Component xdobry::pgsql</h2>
+<b>comment:</b><pre>API To postgresql database using the
+PgTcl interface
+PgTcl Tcl interface should be in your Linux distribution with postgres client software.
+
+</pre>
+Classes <ul>
+<li><a href="#class_PgSql">PgSql</a></li>
+<li><a href="#class_PgSql::SqlQuerry">PgSql::SqlQuerry</a></li>
+</ul> 
+Classes Hierarchy <ul>
+<li><a href="#class_PgSql">PgSql</a></li><li><a href="#class_PgSql::SqlQuerry">PgSql::SqlQuerry</a></li></ul>
+
+<hr>
+<a name="class_PgSql">
+<h3>Class PgSql</h3>
+parameter: user password hostname {interface postgres}<br>
+<b>superclasses:</b>
+<a href="xdobry_sql.html#class_Sqlinterface">Sqlinterface</a>
+</br>Instprocs:<dl>
+<dt><b>execute</b> {sqlstatement}</dt>
+<dd>Sendet eine SQL Anweisung an Server (keine SELECT)</dd>
+</dl>
+<hr>
+<a name="class_PgSql::SqlQuerry">
+<h3>Class PgSql::SqlQuerry</h3>
+parameter: qhandle<br>
+<b>comment:</b><pre>PgSql instproc getinsertid {} {
+[self] instvar insertid
+return $insertid
+}</pre><p>
+Instprocs:<dl>
+<dt><b>rows</b> {}</dt>
+<dd>PgSql::SqlQuerry instproc getinsertid {} {
+[self] instvar qhandle
+return [pg_result $qhandle -oid]
+}</dd>
+</dl>
+<hr>
+
+
+
+</body>
+</html>
+

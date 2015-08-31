@@ -1,0 +1,72 @@
+<! -- -*- tcl -*- doctools
+   -->
+<html><head><title>memchan - Memory channels </title></head>
+<! -- Generated from file 'memchanapi.man' by tcllib/doctools with format 'html'
+   -->
+<! -- Copyright (c) 2004 Pat Thoyts &lt;patthoyts@users.sourceforge.net&gt;
+   -->
+<! -- CVS: $Id$ memchan.n
+   -->
+
+<h1> memchan(n) 2.2  &quot;Memory channels&quot;</h1>
+<a name="name"><h2>NAME</h2>
+<p> memchan - C API for creating memory channels
+
+
+
+
+
+<a name="synopsis"><h2>SYNOPSIS</h2>
+package require <b>Tcl</b><br>
+package require <b>memchan</b><br>
+<br><table border=1 width=100% cellspacing=0 cellpadding=0><tr            bgcolor=lightyellow><td bgcolor=lightyellow><table 0 width=100% cellspacing=0 cellpadding=0><tr valign=top ><td >Tcl_Channel <b class='cmd'>Memchan_CreateMemoryChannel</b> (<i class='arg'>Tcl_Interp *interp</i>, <i class='arg'>int initialSize</i>)</td></tr>
+<tr valign=top ><td >Tcl_Channel <b class='cmd'>Memchan_CreateFifoChannel</b> (<i class='arg'>Tcl_Interp *interp</i>)</td></tr>
+<tr valign=top ><td >void <b class='cmd'>Memchan_CreateFifo2Channel</b> (<i class='arg'>Tcl_Interp *interp</i>, <i class='arg'>Tcl_Channel *aPtr</i>, <i class='arg'>Tcl_Channel *bPtr</i>)</td></tr>
+<tr valign=top ><td >Tcl_Channel <b class='cmd'>Memchan_CreateNullChannel</b> (<i class='arg'>Tcl_Interp *interp</i>)</td></tr>
+<tr valign=top ><td >Tcl_Channel <b class='cmd'>Memchan_CreateZeroChannel</b> (<i class='arg'>Tcl_Interp *interp</i>)</td></tr>
+<tr valign=top ><td >Tcl_Channel <b class='cmd'>Memchan_CreateRandomChannel</b> (<i class='arg'>Tcl_Interp *interp</i>)</td></tr>
+</table></td></tr></table>
+<a name="description"><h2>DESCRIPTION</h2>
+
+The <strong>memchan</strong> package provides a C API for use by
+third-party extension writers. This is exposed by a Tcl stubs library
+table to reduce version dependency as is available for Tcl itself.
+
+<a name="command"><h2>COMMAND</h2>
+<dl>
+<dt>Tcl_Channel <b class='cmd'>Memchan_CreateMemoryChannel</b> (<i class='arg'>Tcl_Interp *interp</i>, <i class='arg'>int initialSize</i>)<dd>
+
+
+<dt>Tcl_Channel <b class='cmd'>Memchan_CreateFifoChannel</b> (<i class='arg'>Tcl_Interp *interp</i>)<dd>
+
+<dt>void <b class='cmd'>Memchan_CreateFifo2Channel</b> (<i class='arg'>Tcl_Interp *interp</i>, <i class='arg'>Tcl_Channel *aPtr</i>, <i class='arg'>Tcl_Channel *bPtr</i>)<dd>
+
+
+<dt>Tcl_Channel <b class='cmd'>Memchan_CreateNullChannel</b> (<i class='arg'>Tcl_Interp *interp</i>)<dd>
+
+
+<dt>Tcl_Channel <b class='cmd'>Memchan_CreateZeroChannel</b> (<i class='arg'>Tcl_Interp *interp</i>)<dd>
+
+
+<dt>Tcl_Channel <b class='cmd'>Memchan_CreateRandomChannel</b> (<i class='arg'>Tcl_Interp *interp</i>)<dd>
+
+
+</dl>
+<p>
+Each of these functions creates an returns a channel exactly as
+described in the Tcl command pages for each of the <strong>memchan</strong>
+commands. The Tcl commands internally call these functions to create
+the channels.
+<p>
+The <b class='cmd'>memchan</b> channel accepts an <i class='arg'>initialSize</i> argument to
+permit pre-allocating space for the internal buffer. Normally this may
+be set to 0.
+<p>
+The <b class='cmd'>fifo2</b> API function looks a little different because it must
+return two linked channels.
+
+<a name="seealso"><h2>SEE ALSO</h2>
+Tcl_GetChannelName
+<a name="copyright"><h2>COPYRIGHT</h2>
+Copyright (c) 2004 Pat Thoyts &lt;patthoyts@users.sourceforge.net&gt;<br>
+</body></html>

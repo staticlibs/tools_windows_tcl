@@ -1,0 +1,203 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Importing Tcl Projects into XOTclIDE Components</title><meta name="generator" content="DocBook XSL Stylesheets V1.68.1"><link rel="start" href="index.html" title="XOTclIDE User Guide"><link rel="up" href="ch04.html" title="Chapter 4. Extended Features"><link rel="prev" href="ch04s04.html" title="Debugging"><link rel="next" href="ch05.html" title="Chapter 5. Additional Information"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Importing Tcl Projects into XOTclIDE Components</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch04s04.html">Prev</a> </td><th width="60%" align="center">Chapter 4. Extended Features</th><td width="20%" align="right"> <a accesskey="n" href="ch05.html">Next</a></td></tr></table><hr></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2984671"></a>Importing Tcl Projects into XOTclIDE Components</h2></div></div></div><p>
+In XOTclIDE there are three ways to import your existing Tcl sources into XOTclIDE components.
+This section describes how these importing function work and what their limits are.
+Generally if your Tcl program is well structured and has no commands or a few commands in the global script context other than class or procedure definitions the importing works out of the box.
+</p><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2984687"></a>Importing by definition tracking</h3></div></div></div><p>
+There are two main importing functions in XOTclIDE,
+both accessible from the <span><strong class="command">Component Browser</strong></span>
+
+</p><div class="variablelist"><dl><dt><span class="term">Load Package</span></dt><dd><p>
+<span class="guimenu">Component</span>-&gt;<span class="guimenuitem">Load Package</span>
+With this function you can load any Tcl package accessible in your Tcl system by calling
+<span><strong class="command">package require name</strong></span>.
+</p></dd><dt><span class="term">Import Source</span></dt><dd><p>
+<span class="guimenu">Component</span>-&gt;<span class="guimenuitem">Import Source</span>
+This importing function can evaluate any script in the file system.
+It is the same as using the command 
+<span><strong class="command">source filename</strong></span>.
+</p></dd></dl></div><p>
+
+The importing functions in XOTclIDE do not parse Tcl scripts but evaluate them with the Tcl Interpreter.
+Therefore the importing works very reliably.
+Any package or script can be loaded into XOTclIDE.
+XOTclIDE tracks the definition of Tcl procedures with the
+
+<span><strong class="command">proc name arguments body</strong></span> command and the definition of XOTcl Classes, Objects and their instance methods and class methods.
+The importing tracker notices every newly defined procedure, creates components, and adds the procedure to this component.
+All procedures are also normally evaluated by Tcl interpreter.
+The importing tracker does not notice any other script evaluation in the global context.
+</p><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="id2984793"></a>Limits of Source Importing and manual adaptation</h4></div></div></div><p>
+Let's examine a Tcl script in the file 
+
+<code class="filename">myapp.tcl</code> that should be imported.
+</p><pre class="programlisting">
+# This is great script that I want to reuse in XOTclIDE
+# Author: old Tcl'er
+# Revision: 
+package require Tk
+
+# set debug 1 
+set color red
+set configfile myapp.conf
+if {![file exists $myapp.conf]} {
+    # error "can not find config file $configfile"
+}
+
+# Starting Application 
+# parameters: None
+proc startApp {} {
+    button .re -text "Quit" -command "quite"
+    # ... your program
+}
+... many other defined procedures
+
+# next line starts the application
+startApp
+</pre><p>
+The importing function will create a new component with the name <span class="emphasis"><em>myapp</em></span> with all your procedures.
+The new component can be seen as follows
+
+</p><pre class="programlisting">
+# automatically generated from XOTclIDE
+package provide importExample 0.1
+
+@ tclproc startApp idemeta struct importExample default
+proc startApp {} {
+   # button .re -text "Quit" -command "quite"
+   # ... your program
+}
+</pre><p>
+As you see, all comments, global context commands and the application starting command are lost.
+Comments (# lines) in the global context are not imported during evaluation because Tcl ignores them.
+You can use the comment importer (see <a href="ch04s05.html#importingTclComments" title="Importing Tcl comments">the section called “Importing Tcl comments”</a>) to add these comments to the component.
+</p><p>
+Another problem is the evaluation of Tcl commands in the global context.
+In XOTclIDE you should have just one such line coded in the configuration map (see  
+<a href="ch04s03.html" title="Configurations Management">the section called “Configurations Management”</a>).
+To enable proper import the definition block should be moved to a special new procedure.
+The example above could appear as follows:
+
+
+</p><pre class="programlisting">
+# This is great script that I want to reuse in XOTclIDE
+# Author: old Tcl'er
+# Revision: 
+package require Tk
+
+# set debug 1 
+proc defineGlobalConstans {} {
+    global color configfile
+    set color red
+    set configfile myapp.conf
+}
+proc checkConfigFile {}  {
+    global configfile
+    if {![file exists $configfile]} {
+         # error "can not find config file $configfile"
+    }
+}
+# Starting Application 
+# parameters: None
+proc startApp {} {
+     button .re -text "Quit" -command "quite"
+     # ... your program
+}
+proc basicStartApp {} {
+     defineGlobalConstans
+     checkConfigFile
+     startApp
+}
+... many other defined procedures
+
+# next line start the application
+basicStartApp
+</pre><p>
+In this case we have only one line with direct script evaluation and this can be imported into XOTclIDE without losing information.
+I think good Tcl programs should be written this way - no evaluation in the global context - anyway.
+</p></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="id2984887"></a>Importing - Load regular Tcl Package</h4></div></div></div><p>
+To import a regular tcl package use menu
+
+
+<span class="guimenu">Component</span>-&gt;<span class="guimenuitem">Load Package</span> in 
+
+<span><strong class="command">Component Browser</strong></span>.
+A new component with the same name as the imported package will be created, along with
+nested packages that are loaded from the imported package using package require.
+
+
+</p><div class="figure"><a name="loadPackage"></a><p class="title"><b>Figure 4.12. Load Package Dialog</b></p><div class="mediaobject"><img src="LoadPackage.png" alt="Load Package Dialog"></div></div><p>
+</p></div><div class="sect3" lang="en"><div class="titlepage"><div><div><h4 class="title"><a name="id2984955"></a>Importing - Import Source</h4></div></div></div><p>
+Newly created components will have names that correspond to the script file name, without extension.
+Any nested script evaluation or package require commands are respected.
+Before sourcing the script XOTclIDE changes the working directory to the path of the script file.
+The application will start normally.
+A problem may appear when the application uses a toplevel window, as the
+toplevel window is already used by the XOTclIDE Transcript window.
+If an error occurs while importing, importing is interrupted with the error message.
+</p><p>
+Procedures defined in the :: namespace will be added to a Tcl-Proc-Group named 
+
+“<span class="quote">default</span>”.
+Procedures with names 
+
+“<span class="quote">mynamespace::myname</span>” with be added to a Tcl-Proc-Group named 
+
+“<span class="quote">mynamespace</span>”.
+</p></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2984990"></a>Importing by System Introspection</h3></div></div></div><p>
+Another way to import your application is to start XOTclIDE from your application and introspect it with XOTclIDE.
+XOTclIDE can import procedures and XOTcl object classes directly from a running Tcl interpreter.
+To start XOTclIDE from your application you can use the
+
+<code class="filename">START.tcl</code> script in the XOTclIDE directory.
+Change the working directory to the XOTclIDE directory with the
+
+<code class="filename">START.tcl</code> script.
+</p><p>
+To import code from your running application you must first create a new component where all procedures and classes from the Interpreter will be stored.
+To import a Tcl procedure from the Tcl interpreter, first select the component where you want to import to and use menu
+
+
+<span class="guimenu">Command</span>-&gt;<span class="guisubmenu">Low Level Functions</span>-&gt;<span class="guimenuitem">Register Tcl Proc from Interp</span>
+in 
+
+<span><strong class="command">Component Browser</strong></span>
+</p><p>
+To import XOTcl Classes from the Interpreter select the component and choose menu
+
+<span class="guimenu">Command</span>-&gt;<span class="guisubmenu">Low level Functions</span>-&gt;<span class="guimenuitem">Register Class from Interp</span>
+in 
+
+<span><strong class="command">Component Browser</strong></span>
+</p><p>
+Although importing an application like this is more work, it's a good choice if you want to import only part of an application or the application is not in a readable format.
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="importingTclComments"></a>Importing Tcl comments</h3></div></div></div><p>
+Consider the example below
+
+</p><pre class="programlisting">
+# This procedure make magic initialization of
+# X Module.
+# Warning: 
+proc initModuleX {{path {}} {
+     #
+     #
+} 
+</pre><p>
+The three line comment belongs to procedure initModuleX.
+XOTclIDE has a special parser that can scan Tcl script files and associate the
+comments to previously imported components.
+To launch the # Comments Scanner use the menu
+
+<span class="guimenu">System</span>-&gt;<span class="guisubmenu">Extras</span>-&gt;<span class="guimenuitem"># Comments Scanner</span>
+Unlike the source importer, this tool does not evaluate the selected scripts but scans
+all lines after a leading # character.
+
+</p><div class="figure"><a name="commentScanner"></a><p class="title"><b>Figure 4.13. Comment Scanner Tool</b></p><div class="mediaobject"><img src="commentsScanner.png" alt="Comment Scanner Tool"></div></div><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2985168"></a>Plug-ins Architecture</h3></div></div></div><p>One of main advantages of XOTclIDE is easy customizing of XOTclIDE for users needs.
+Many of XOTclIDE components are loaded dynamic at runing time only on demand.
+In menu
+<span class="guimenu">System</span>-&gt;<span class="guimenuitem">Plug Ins</span>
+are all currently registered plug-ins accesible.
+The plug ins are normal components the registration and start scripts are specified per file <code class="filename">pluginslist.txt</code> in XOTclIDE directory.</p><p>Following Plug-Ins are currently delivered with XOTclIDE
+</p><div class="variablelist"><dl><dt><span class="term">Unit Test Framework</span></dt><dd><p>Unit Test Framework programmed after Smalltalk SUnit (JUnit, NUnit). See also <a href="http://www.xprogramming.com/testfram.htm" target="_top">Unit Tests Homepage</a></p></dd><dt><span class="term">XOTclIDE Unit Tests</span></dt><dd><p>Tests of XOTclIDE itself</p></dd><dt><span class="term">Funny Graphics Example</span></dt><dd><p>Small XOTcl Application taken from Tcl Wiki</p></dd><dt><span class="term">HTML Doc Generator</span></dt><dd><p>Generate HTML Source Code Documentation from Source Comments</p></dd><dt><span class="term"># Comments Scaner</span></dt><dd><p>Importing tool described in <a href="ch04s05.html#importingTclComments" title="Importing Tcl comments">the section called “Importing Tcl comments”</a></p></dd><dt><span class="term">Tcl Wiki Reaper</span></dt><dd><p>Can import code sniplets form Tcl wiki <a href="http://mini.net/tcl/8179" target="_top">Tcl Wiki</a></p></dd><dt><span class="term">TclKit Deploeyer Tool</span></dt><dd><p>This tool extend the functionality of Application Deployer Wizard.
+It can generate TclKit Distributions or standalone Starpacks directly from XOTclIDE.
+It work properly only form XOTclIDE TclKit version or if TclKit envirorment are installed properly in your Tcl system</p></dd><dt><span class="term">Tk Win Inspector</span></dt><dd><p>This tool can inspect all Tk windows. It can be used to view and change all configuration of every Tk window. Tk Inspector includes also widget serializator that can be used to serialize every windows and their descend to Tcl script that can be used as code snippet.</p></dd><dt><span class="term">Tcl Script Editor</span></dt><dd><p>Ideal for edit and test short Tcl-scripts that all contents are evaluated in global context. You can use all advantages of XOTclIDE: syntax highlighting, syntax check, code completion. The script can be evaluated in slave interpreter.</p></dd><dt><span class="term">SQL Browser</span></dt><dd><p>GUI helper for SQL access to all databases supported by XOTclIDE. Additional 2 Lists-Views show all table names and columns names (schema of DB). The result will be displayed in TkTable-Widget. Every cell can be also viewed in separately view.</p></dd><dt><span class="term">Visual Regexp</span></dt><dd><p>This plug-in is adapted GPL program written by L. Riesterer <a href="http://laurent.riesterer.free.fr/regexp/" target="_top">original source</a></p></dd></dl></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch04s04.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="ch04.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ch05.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Debugging </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Chapter 5. Additional Information</td></tr></table></div></body></html>

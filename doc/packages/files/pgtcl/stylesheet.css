@@ -1,0 +1,58 @@
+/* $Id: stylesheet.css,v 1.2 2006-09-09 22:06:37+00 lbayuk Exp $ */
+/* HTML Stylesheet for pgtcl Reference Manual (DocBook-XML version) */
+
+/* Title page */
+h1.title {
+  text-align: center;
+  font-size: 250%;
+}
+h2.subtitle {
+  text-align: center;
+  font-size: 150%;
+}
+p.copyright {
+  text-align: center;
+  font-size: 80%;
+}
+
+/* Table of Contents */
+.toc dl dt {
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
+.toc dl dl dt {
+  padding-top: 0em;
+  padding-bottom: 0em;
+}
+
+/* Abstract */
+.abstract {
+  margin-left: 4em;
+  margin-right: 4em;
+}
+/* This is sad. No other apparent way to get rid of the default title
+   "Abstract" which appears over the abstract in DocBook-XML.
+    DocBook-SGML doesn't do it at all.
+*/
+.abstract .title {
+  display: none;
+}
+
+/* Shade and indent examples and listings */
+pre.programlisting, pre.synopsis, pre.screen {
+  background-color: #e0e0e0;
+  padding: 10px;
+  margin-left: 4em;
+}
+/* Indent examples, line up program listings inside examples */
+div.example {
+  margin-left: 4em;
+}
+div.example pre.programlisting, div.example pre.screen {
+  margin-left: 0em;
+}
+
+/* Don't put userinput in bold (strong) - hard to read. */
+strong.userinput {
+  font-weight: normal;
+}

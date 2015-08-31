@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" /><title>5.4. Example - The Different Ways to Get Query Results</title><link rel="stylesheet" href="stylesheet.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.70.1" /><link rel="start" href="index.html" title="Pgtcl Reference Manual" /><link rel="up" href="pgtcl-examples.html" title="Chapter 5. Example Programs" /><link rel="prev" href="pgtcl-example-dblist.html" title="5.3. Example - Get List of Databases" /><link rel="next" href="pgtcl-example-picstore-lo.html" title="5.5. Example - Large Objects - Picture Viewer, Part 1 - Store Pictures" /><link rel="copyright" href="ln-legalnotice.html" title="Legal Notice" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">5.4. Example - The Different Ways to Get Query Results</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="pgtcl-example-dblist.html">Prev</a> </td><th width="60%" align="center">Chapter 5. Example Programs</th><td width="20%" align="right"> <a accesskey="n" href="pgtcl-example-picstore-lo.html">Next</a></td></tr></table><hr /></div><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="pgtcl-example-results"></a>5.4. Example - The Different Ways to Get Query Results</h2></div></div></div><p>
+<span class="application">pgtcl</span> has many different ways to get at query 
+results. The purpose of this example is to clarify the different ways the
+query result data can be returned.
+</p><p>
+Assume the following data table called <code class="literal">volcanos</code>:
+</p><div class="informaltable"><a id="pgtcl-example-datatable"></a><table border="1"><colgroup><col /><col /><col /></colgroup><thead><tr><th>(id INTEGER PRIMARY KEY,</th><th>volcano TEXT,</th><th>location TEXT,</th><th>last_eruption DATE)</th></tr></thead><tbody><tr><td>1</td><td>Mount Karangetang</td><td>Indonesia</td><td>2001-01-25</td></tr><tr><td>2</td><td>Hakkoda</td><td>Japan</td><td>1997-07-12</td></tr><tr><td>3</td><td>Akutan</td><td>Alaska</td><td>1996-03-10</td></tr><tr><td>4</td><td>Momotombo</td><td>Nicaragua</td><td>1996-04-04</td></tr></tbody></table></div><p>
+Now assume the following query was issued:
+</p><pre class="programlisting">
+set result [pg_exec $conn "SELECT * FROM volcanos ORDER BY ID"]
+</pre><p>
+The following examples illustrate the different ways to access the data.
+</p><div class="example"><a id="pgtcl-example-results-code1"></a><p class="title"><b>Example 5.5. Result data: -getTuple</b></p><div class="example-contents"><pre class="programlisting">
+# pg_result -getTuple returns a Tcl list containing the result column values
+# from a single row (tuple), selected by a zero-based row number argument.
+puts "Result is: [pg_result $result -getTuple 0]
+</pre><p>
+Output:
+</p><pre class="screen">
+Result is: 1 {Mount Karangetang} Indonesia 2001-01-25
+</pre></div></div><br class="example-break" /><div class="example"><a id="pgtcl-example-results-code2"></a><p class="title"><b>Example 5.6. Result data: -tupleArray</b></p><div class="example-contents"><pre class="programlisting">
+# pg_result -tupleArray assigns values from one row of the query to an array.
+# The desired row is selected by a zero-based row number argument.
+# The array indexes are the column names.
+pg_result $result -tupleArray 2 MyArray
+parray MyArray
+</pre><p>
+Output:
+</p><pre class="screen">
+MyArray(id)            = 3
+MyArray(last_eruption) = 1996-03-10
+MyArray(location)      = Alaska
+MyArray(volcano)       = Akutan
+</pre></div></div><br class="example-break" /><div class="example"><a id="pgtcl-example-results-code3"></a><p class="title"><b>Example 5.7. Result data: -assign</b></p><div class="example-contents"><pre class="programlisting">
+# pg_result -assign assigns the entire query result - column values from
+# all rows - to a single array, indexed by the row number (starting at zero),
+# and the column name, with the parts of the array index separated by a comma.
+pg_result $result -assign MyArray
+parray MyArray
+</pre><p>
+Output:
+</p><pre class="screen">
+MyArray(0,id)            = 1
+MyArray(0,last_eruption) = 2001-01-25
+MyArray(0,location)      = Indonesia
+MyArray(0,volcano)       = Mount Karangetang
+MyArray(1,id)            = 2
+MyArray(1,last_eruption) = 1997-07-12
+MyArray(1,location)      = Japan
+MyArray(1,volcano)       = Hakkoda
+MyArray(2,id)            = 3
+MyArray(2,last_eruption) = 1996-03-10
+MyArray(2,location)      = Alaska
+MyArray(2,volcano)       = Akutan
+MyArray(3,id)            = 4
+MyArray(3,last_eruption) = 1996-04-04
+MyArray(3,location)      = Nicaragua
+MyArray(3,volcano)       = Momotombo
+</pre></div></div><br class="example-break" /><div class="example"><a id="pgtcl-example-results-code4"></a><p class="title"><b>Example 5.8. Result data: -list</b></p><div class="example-contents"><pre class="programlisting">
+# pg_result -list returns a Tcl list containing the entire query result.
+# The list items are in row-major, column-minor order.
+puts "Result is: [pg_result $result -list]
+</pre><p>
+Output (line-wrapped for presentation):
+</p><pre class="screen">
+Result is: 1 {Mount Karangetang} Indonesia 2001-01-25 2 Hakkoda Japan
+  1997-07-12 3 Akutan Alaska 1996-03-10 4 Momotombo Nicaragua 1996-04-04
+</pre></div></div><br class="example-break" /><div class="example"><a id="pgtcl-example-results-code5"></a><p class="title"><b>Example 5.9. Result data: -llist</b></p><div class="example-contents"><pre class="programlisting">
+# pg_result -llist returns a Tcl list of lists containing the entire query
+# result.  Each item in the outer list is for one row of the query result,
+# and each inner list contains the column values for that row.
+puts "Result is: [pg_result $result -llist]
+</pre><p>
+Output (line-wrapped for presentation):
+</p><pre class="screen">
+Result is: {1 {Mount Karangetang} Indonesia 2001-01-25} {2 Hakkoda Japan
+  1997-07-12} {3 Akutan Alaska 1996-03-10} {4 Momotombo Nicaragua 1996-04-04}
+</pre></div></div><br class="example-break" /><div class="example"><a id="pgtcl-example-results-code6"></a><p class="title"><b>Example 5.10. Result data: -assignbyidx</b></p><div class="example-contents"><pre class="programlisting">
+# pg_result -assignbyidx is similar to -assign in that it assigns all the
+# values from all the rows in the query to a single array, but it forms
+# the array indexes using the value of the first column of the query result
+# (typically the table primary key column), followed by the field names,
+# followed by an optional suffix. Note that the first column of the result
+# is not stored in the array - it is used as part of the index for the
+# other values in each row.
+# In this example, the optional suffix is not used.
+pg_result $result -assignbyidx MyArray
+parray MyArray
+</pre><p>
+Output:
+</p><pre class="screen">
+MyArray(1,last_eruption) = 2001-01-25
+MyArray(1,location)      = Indonesia
+MyArray(1,volcano)       = Mount Karangetang
+MyArray(2,last_eruption) = 1997-07-12
+MyArray(2,location)      = Japan
+MyArray(2,volcano)       = Hakkoda
+MyArray(3,last_eruption) = 1996-03-10
+MyArray(3,location)      = Alaska
+MyArray(3,volcano)       = Akutan
+MyArray(4,last_eruption) = 1996-04-04
+MyArray(4,location)      = Nicaragua
+MyArray(4,volcano)       = Momotombo
+</pre></div></div><br class="example-break" /></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="pgtcl-example-dblist.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="pgtcl-examples.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="pgtcl-example-picstore-lo.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">5.3. Example - Get List of Databases </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 5.5. Example - Large Objects - Picture Viewer, Part 1 - Store Pictures</td></tr></table></div></body></html>

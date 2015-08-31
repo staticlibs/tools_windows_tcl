@@ -1,0 +1,66 @@
+<! -- -*- tcl -*- doctools
+   -->
+<html><head><title>zero - Memory channels </title></head>
+<! -- Generated from file 'zero.man' by tcllib/doctools with format 'html'
+   -->
+<! -- Copyright (c) 2004 Pat Thoyts &lt;patthoyts@users.sourceforge.net&gt;
+   -->
+<! -- CVS: $Id$ zero.n
+   -->
+
+<h1> zero(n) 2.2  &quot;Memory channels&quot;</h1>
+<a name="name"><h2>NAME</h2>
+<p> zero - Create and manipulate zero channels
+
+
+
+
+
+<a name="synopsis"><h2>SYNOPSIS</h2>
+package require <b>Tcl</b><br>
+package require <b>memchan</b><br>
+<br><table border=1 width=100% cellspacing=0 cellpadding=0><tr            bgcolor=lightyellow><td bgcolor=lightyellow><table 0 width=100% cellspacing=0 cellpadding=0><tr valign=top ><td ><b class='cmd'>zero</b> </td></tr>
+</table></td></tr></table>
+<a name="description"><h2>DESCRIPTION</h2>
+<p>
+The command described here is only available in a not-yet released
+version of the package. Use the CVS to get the sources.
+
+<dl>
+
+<dt><b class='cmd'>zero</b> <dd>
+
+
+creates a zero channel which absorbs everything written into
+it. Reading from a zero channel will return the requested number of null 
+bytes. These channels are essentially Tcl-specific variants of the
+zero device for unixoid operating systems (/dev/zero). Transfering the
+generated channel between interpreters is possible but does not make
+much sense.
+
+</dl>
+
+<a name="options"><h2>OPTIONS</h2>
+
+Memory channels created by <b class='cmd'>zero</b> provide one additional option to
+set or query.
+
+<dl>
+
+    <dt><i class='arg'>-delay ?milliseconds?</i><dd>
+
+    A <b class='cmd'>zero</b> channel is always writable and readable. This means
+    that all <b class='cmd'>fileevent</b>-handlers will fire continuously.  To
+    avoid starvation of other event sources the events raised by this
+    channel type have a configurable delay. This option is set in
+    milliseconds and defaults to 5.
+
+</dl>
+
+<a name="seealso"><h2>SEE ALSO</h2>
+memchan, fifo, fifo2, null, random
+<a name="keywords"><h2>KEYWORDS</h2>
+zero, null, in-memory channel, channel, i/o
+<a name="copyright"><h2>COPYRIGHT</h2>
+Copyright (c) 2004 Pat Thoyts &lt;patthoyts@users.sourceforge.net&gt;<br>
+</body></html>

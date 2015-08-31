@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" /><title>5.6. Example - Large Objects - Picture Viewer, Part 2 - View Pictures</title><link rel="stylesheet" href="stylesheet.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.70.1" /><link rel="start" href="index.html" title="Pgtcl Reference Manual" /><link rel="up" href="pgtcl-examples.html" title="Chapter 5. Example Programs" /><link rel="prev" href="pgtcl-example-picstore-lo.html" title="5.5. Example - Large Objects - Picture Viewer, Part 1 - Store Pictures" /><link rel="next" href="pgtcl-example-picstore-pq.html" title="5.7. Example - Prepared Queries - Picture Viewer, Part 1 - Store Pictures" /><link rel="copyright" href="ln-legalnotice.html" title="Legal Notice" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">5.6. Example - Large Objects - Picture Viewer, Part 2 - View Pictures</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="pgtcl-example-picstore-lo.html">Prev</a> </td><th width="60%" align="center">Chapter 5. Example Programs</th><td width="20%" align="right"> <a accesskey="n" href="pgtcl-example-picstore-pq.html">Next</a></td></tr></table><hr /></div><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="pgtcl-example-picview-lo"></a>5.6. Example - Large Objects - Picture Viewer, Part 2 - View Pictures</h2></div></div></div><p>
+This example is the second part of a GIF picture viewer which stores
+the images as large objects in the database. Given an identifier on
+the command line, it attempts to retrieve and display the stored
+picture with that identifier.
+</p><p>
+See <a href="pgtcl-example-picstore-lo.html" title="5.5. Example - Large Objects - Picture Viewer, Part 1 - Store Pictures">Section 5.5, &#8220;Example - Large Objects - Picture Viewer, Part 1 - Store Pictures&#8221;</a> for the program used to
+insert the pictures in the database.
+</p><p>
+This example runs under <span class="application">wish</span>, not
+<span class="application">tclsh</span>.  It also assumes database connection
+information is provided through the environment.
+</p><div class="example"><a id="pgtcl-example-picview-lo-code"></a><p class="title"><b>Example 5.12. Large Objects - View Pictures Stored in Database</b></p><div class="example-contents"><pre class="programlisting">
+#!/usr/bin/wish
+# Example - picture storage as Large Object - viewer
+
+package require Pgtcl
+
+# Return the large object data identified by 'name'.
+# Throw an error if it can't be read.
+proc get_picture {conn name} {
+    set q_name [pg_escape_string $name]
+
+    set result [pg_exec $conn "SELECT poid FROM pics WHERE pname='$q_name'"]
+
+    if {[pg_result $result -status] != "PGRES_TUPLES_OK"} {
+        set message [pg_result $result -error]
+        pg_result $result -clear
+        error "Error: Query failed: $message"
+    }
+
+    if {[set n [pg_result $result -numTuples]] != 1} {
+        pg_result $result -clear
+        error "Error: Query returned $n results"
+    }
+
+    # Get the OID from the query result: tuple 0, column 0:
+    set oid [lindex [pg_result $result -getTuple 0] 0]
+    pg_result $result -clear
+
+    # Read the large object from the database, and store it in $data:
+    pg_execute $conn BEGIN
+    if {[catch {
+        set lofd [pg_lo_open $conn $oid r]
+        set data {}
+        while {[pg_lo_read $conn $lofd buf 8192] &gt; 0} {
+            append data $buf
+        }
+        pg_lo_close $conn $lofd
+    } msg]} {
+        pg_execute $conn ROLLBACK
+        error "Error reading large object: $msg"
+    }
+    # No changes, might as well roll back
+    pg_execute $conn ROLLBACK
+    return $data
+}
+
+
+if {$argc != 1} {
+    puts stderr "Usage: view_picture name"
+    exit 1
+}
+set name [lindex $argv 0]
+
+# Connect to the database.
+set conn [pg_connect -conninfo ""]
+
+# Get the picture data:
+set failed [catch {get_picture $conn $name} data]
+
+# Done with database connection:
+pg_disconnect $conn
+
+# Exit if unable to retrieve the data:
+if {$failed} {
+    puts "Failed to view picture '$name': $data"
+    exit
+}
+
+# Make the viewer and show the picture:
+wm title . "Picture: $name"
+image create photo p -data $data -format GIF
+label .top -image p
+button .quit -text Close -command exit -default active
+bind . &lt;Return&gt; exit
+pack .top -side top
+pack .quit
+</pre></div></div><br class="example-break" /></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="pgtcl-example-picstore-lo.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="pgtcl-examples.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="pgtcl-example-picstore-pq.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">5.5. Example - Large Objects - Picture Viewer, Part 1 - Store Pictures </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 5.7. Example - Prepared Queries - Picture Viewer, Part 1 - Store Pictures</td></tr></table></div></body></html>

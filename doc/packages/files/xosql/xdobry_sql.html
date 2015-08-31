@@ -1,0 +1,180 @@
+<html>
+<title>xdobry::sql</title>
+<body>
+<a href="index.html">Contents</a><hr>
+<h2>Component xdobry::sql</h2>
+<b>comment:</b><pre>XOSql base component
+
+currently supported base interfaces: mysqltcl, postgres, odbctcl and dbitotcl.
+
+Base Usage Example
+1) Connecting mysql
+set obj [Sqlinterface loadInterface mysqltcl]
+$obj connect {user root dbank mydb}
+puts [$obj queryList {select * from mytab}]
+
+2) Connection per tk dialog
+set obj [IDEDBConnectDialog setConnectionOn]
+
+See documentation of all methods and classes to get all informations
+
+hompage: http://www.xdobry.de/xosql
+
+XOSql is GPL Software 
+and comes with ABSOLUTELY NO WARRANTY 
+See the GNU General Public License for more details.
+
+See file LICENSE for more details 
+</pre>
+Classes <ul>
+<li><a href="#class_IDEDBConnectDialog">IDEDBConnectDialog</a></li>
+<li><a href="#class_IDEDBConnectFrame">IDEDBConnectFrame</a></li>
+<li><a href="#class_Sqlinterface">Sqlinterface</a></li>
+</ul> 
+Classes Hierarchy <ul>
+<li><a href="#class_IDEDBConnectDialog">IDEDBConnectDialog</a></li><li><a href="#class_IDEDBConnectFrame">IDEDBConnectFrame</a></li><li><a href="#class_Sqlinterface">Sqlinterface</a></li></ul>
+
+<hr>
+<a name="class_IDEDBConnectDialog">
+<h3>Class IDEDBConnectDialog</h3>
+parameter: {type okcancel} {interface {}} {connectArgs {}} connectionObject<br>
+<b>comment:</b><pre>Dialog frame for connection dialog</pre><p>
+Procs:<dl>
+<dt><b>setConnectionOn</b> {object connectArgs}</dt><dd>Offer Tk GUI dialog to establish sql connection
+if interface object are specified this interface will be used 
+Example: For connect mysql
+
+IDEDBConnectDialog setConnectionOn MySql
+If object is empty the user can choose the interface
+
+IDEDBConnectDialog setConnectionOn {}
+
+You can also pass some default values (as returned from getconnectionargs)
+IDEDBConnectDialog setConnectionOn MySql {user root host 127.0.0.1}
+
+</dd>
+</dl>
+<hr>
+<a name="class_IDEDBConnectFrame">
+<h3>Class IDEDBConnectFrame</h3>
+parameter: win connectionObject connectArgs {writefile 0}<br>
+<b>comment:</b><pre>The inner connection frame.
+It can be used if you want to have connection dialog inside
+of windows of your control</pre><p>
+<hr>
+<a name="class_Sqlinterface">
+<h3>Class Sqlinterface</h3>
+parameter: dbank {connected 0} {errorMessage {}}<br>
+<b>subclasses:</b>
+<a href="xdobry_sqlite.html#class_Sqlite">Sqlite</a>
+<a href="xdobry_pgsql.html#class_PgSql">PgSql</a>
+<a href="xdobry_odbc.html#class_ODBC">ODBC</a>
+<a href="xdobry_mysql.html#class_MySql">MySql</a>
+</br><b>comment:</b><pre>Abstract interface (abstract wrapper interface)
+to sql commands handle such function as
+
+1. sql queries
+2. sql execute
+3. connecting database
+4. query metainformation as tables names
+5. inserting row (handle primary key)
+
+The interface use so called query objects that are normal xotcl objects.
+
+Following methods are public API
+-getconnectionargs
+-connect
+-diconnect
+-isConnected
+-hasfunction
+-hasDatabase
+-escape
+-errorMessage
+
+-execute
+-returnAffectedRows
+-insertRow
+-query
+-queryList
+
+All interface errors can be read from parameter errorMessage
+
+</pre><p>
+Instprocs:<dl>
+<dt><b>connect</b> {par_list}</dt>
+<dd>Await a list of connection parameter for example
+{user root db xotcllib}
+Use array get to generate such list from array</dd>
+<dt><b>disconnect</b> {}</dt>
+<dd>disconnect the database connection
+
+The destroing interface object also desconnct from database</dd>
+<dt><b>escape</b> {string}</dt>
+<dd>mask all sql string by replacing string delmiter with \
+for example
+sder"ewr  - adef\"eer
+</dd>
+<dt><b>execute</b> {sql}</dt>
+<dd>execute sql command
+if returnAffectedRows anser 1 (yes) the the result
+is the number of rows that are affected by the command</dd>
+<dt><b>getconnectargs</b> {}</dt>
+<dd>return information about connection parameters
+list of list with elements
+<ul>
+<li>name of argument
+<li>type of argument (text integer password)
+<li>default of argument
+</ul></dd>
+<dt><b>hasfunction</b> {func}</dt>
+<dd>check if the interface or query object support function with name</dd>
+<dt><b>insertRow</b> {table columns values}</dt>
+<dd>confort api to sql command
+<source>INSERT INTO table (col1,col2,..) VALUES (val1,val2,..)</source></dd>
+<dt><b>insertRowAutoId</b> {table columns values primarykey sequenzer}</dt>
+<dd>Insert row and try to compute the autoid for primary key.
+The implementation is dependend from undelying base interface
+mysql supports autoid, postgres has sequencer
+by odbc und sqlite special sequencer database are used</dd>
+<dt><b>isConnected</b> {}</dt>
+<dd>return the state of connection</dd>
+<dt><b>query</b> {sql}</dt>
+<dd>return query object see API to
+MySql::SqlQuerry to get all documentation
+<p>
+empty string is return if error occurs. The error message can be
+retrieve by interface parameter ($interface errorMessage)
+<p>
+Warning!
+All queries must be destroyed to free query resource</dd>
+<dt><b>queryList</b> {sql}</dt>
+<dd>Return result of query statement as Tcl list</dd>
+<dt><b>returnAffectedRows</b> {}</dt>
+<dd>inform with 1 or 0 if method execute
+returns the number of affected rows by DELETE, UPDATE or INSERT statements</dd>
+</dl>
+Procs:<dl>
+<dt><b>getInterfaces</b> {}</dt><dd>Return list of list of all supported interfaces
+the sublists have elements:
+
+tcl-interface name
+xosql name
+xosql interface class
+base interface package</dd>
+<dt><b>getInterfacesCleaned</b> {}</dt><dd>Same as getInterfaces method but
+not return interfaces that are not installed on the system</dd>
+<dt><b>getInterfacesNames</b> {}</dt><dd>Get names of all supported interfaces</dd>
+<dt><b>getInterfacesNamesCleaned</b> {}</dt><dd>Same as getInterfacesNames method but
+not return interfaces that are not installed on the system</dd>
+<dt><b>loadInterface</b> {name}</dt><dd>Load interface with name (same as specified returned from
+getInterfacesNames) and return the interface class.
+
+It is factory method for sql interfaces</dd>
+</dl>
+<hr>
+
+
+
+</body>
+</html>
+

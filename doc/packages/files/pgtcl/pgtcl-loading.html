@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" /><title>Chapter 3. Loading pgtcl into an Application</title><link rel="stylesheet" href="stylesheet.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.70.1" /><link rel="start" href="index.html" title="Pgtcl Reference Manual" /><link rel="up" href="index.html" title="Pgtcl Reference Manual" /><link rel="prev" href="pgtcl-make-macos.html" title="2.3. Building and Installing on MacOS 10" /><link rel="next" href="pgtcl-loading-load.html" title="3.2. Directly loading libpgtcl" /><link rel="copyright" href="ln-legalnotice.html" title="Legal Notice" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter 3. Loading <span class="application">pgtcl</span> into an Application</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="pgtcl-make-macos.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="pgtcl-loading-load.html">Next</a></td></tr></table><hr /></div><div class="chapter" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="pgtcl-loading"></a>Chapter 3. Loading <span class="application">pgtcl</span> into an Application</h2></div></div></div><div class="abstract"><p class="title"><b>Abstract</b></p><p>
+This chapter describes how to use <span class="application">pgtcl</span> with
+your Tcl application.  Before using <span class="application">pgtcl</span> commands,
+you must load the <code class="filename">libpgtcl</code> library into your Tcl
+application.  There are three approaches to doing this, but care must be
+taken because of the dependency on the PostgreSQL
+client library <code class="filename">libpq</code>.
+  </p><p>
+This chapter also describes <span class="application">pgtclsh</span> and
+<span class="application">pgwish</span>, which are Tcl and Tcl/Tk shells
+built with <span class="application">pgtcl</span>.
+  </p><p>
+This chapter only applies to the <span class="application">pgtcl-ng</span>
+implementation of <span class="application">pgtcl</span>. For other
+implementations, check the included documentation.
+  </p></div><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="pgtcl-load-package"></a>3.1. Using the Tcl Package Command</h2></div></div></div><p>
+You can use the Tcl <code class="literal">package</code> command to load
+the <span class="application">pgtcl</span> library.
+This is the recommended approach, especially if you have multiple
+applications using <span class="application">pgtcl</span> on your system.
+For this to work, you need the <code class="filename">libpgtcl</code> library
+and the <code class="filename">pkgIndex.tcl</code> package index file installed.
+If these files are installed properly, your application can use:
+
+</p><pre class="programlisting">
+package require Pgtcl
+</pre><p>
+
+to load the <span class="application">pgtcl</span> library.
+Or, if your application requires a specific version:
+
+</p><pre class="programlisting">
+package require Pgtcl 1.6
+</pre><p>
+
+</p><p>
+This is the preferred method for loading a package into a Tcl application,
+however it does require some installation setup. Specifically, the library
+and package index file must be installed into a subdirectory of the Tcl
+<code class="literal">$auto_path</code> or <code class="literal">$tcl_pkgPath</code>
+directories.
+A typical location for installation of this package might be:
+<code class="filename">/usr/lib/tcl8.4/pgtcl1.6/</code> .
+(Note the subdirectory name (here <code class="filename">pgtcl1.6</code>), does
+not need to match the library name, and by convention includes only
+the two parts of the version. Tcl looks in all subdirectories
+of its package library directory to find packages.)
+Refer to the Tcl documentation on
+<span><strong class="command">pkgMkIndex</strong></span> for more details.
+</p><p>
+In addition to installing the <code class="filename">libpgtcl</code> library,
+you must install the <code class="filename">libpq</code> library in a location
+where it will be found by the system shared library loader. Just
+installing <code class="filename">libpq</code> in the package directory along
+with <code class="filename">libpgtcl</code> will not work.
+</p><p>
+On Unix-like systems, either install the <code class="filename">libpq</code> library
+into a well-known system directory such as
+<code class="filename">/usr/local/lib</code>, or install it somewhere else. If you
+install it somewhere else, either modify the system loader configuration
+(typically using a command like <span><strong class="command">ldconfig</strong></span>), or use the
+environment variable <code class="envar">LD_LIBRARY_PATH</code> to tell the system
+loader where to find it.
+</p><p>
+On some systems Unix-like systems, such as Linux, the path where
+<code class="filename">libpq</code> was found when building
+<code class="filename">libpgtcl</code> is stored in the
+<code class="filename">libpgtcl</code> library (as <code class="literal">rpath</code>).
+This lets the system find the library even if it isn't in a well-known
+system directory or pointed to by <code class="envar">LD_LIBRARY_PATH</code>.
+The other methods of finding the library still apply, if it is not
+in the stored location.
+</p><p>
+On Windows systems, install the <code class="filename">libpq</code> library
+into a directory named in the <code class="envar">PATH</code> environment variable.
+It will also work if the <code class="filename">libpq</code> library is installed in
+the same directory as the Tcl script interpreter <code class="filename">tclsh.exe</code>
+or <code class="filename">wish.exe</code>.
+</p><p>
+Another option for installing the <code class="filename">libpq</code> library is
+to place it in the <span class="application">pgtcl</span> package directory,
+and use a modified package index file to load it.
+Here is a <code class="filename">pkgIndex.tcl</code> package index file for
+Windows systems which enables loading both libraries from the
+package directory. (This file is included in the Windows binary
+distribution, and in the source distribution as
+<code class="filename">pkgIndex.tcl.win32</code>.)
+</p><p>
+</p><pre class="programlisting">
+# Tcl package index file, version 1.1
+# This is a modified package index file for Pgtcl on Windows. libpgtcl needs
+# libpq, but libpq has to be found on PATH. So this modifies PATH before
+# loading libpgtcl, then restores PATH after. This allows you to store
+# both libpgtcl.dll and [b]libpq.dll in the package directory.
+
+proc Pgtcl__load_with_path {dir} {
+  global env
+  set save_path $env(PATH)
+  append env(PATH) ";$dir"
+  load [file join $dir libpgtcl.dll]
+  set env(PATH) $save_path
+}
+package ifneeded Pgtcl 1.6.0 [list Pgtcl__load_with_path $dir]
+</pre><p>
+</p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="pgtcl-make-macos.html">Prev</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="pgtcl-loading-load.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">2.3. Building and Installing on MacOS 10 </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 3.2. Directly loading <code class="filename">libpgtcl</code></td></tr></table></div></body></html>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" /><title>pg_conndefaults</title><link rel="stylesheet" href="stylesheet.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.70.1" /><link rel="start" href="index.html" title="Pgtcl Reference Manual" /><link rel="up" href="pgtcl-ref.html#pgtcl-ref-connection" title="4.1. Database Connection Control Commands" /><link rel="prev" href="pg-disconnect.html" title="pg_disconnect" /><link rel="next" href="pgtcl-ref-connstatus.html" title="4.2. Connection Status Commands" /><link rel="copyright" href="ln-legalnotice.html" title="Legal Notice" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">pg_conndefaults</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="pg-disconnect.html">Prev</a> </td><th width="60%" align="center">4.1. Database Connection Control Commands</th><td width="20%" align="right"> <a accesskey="n" href="pgtcl-ref-connstatus.html">Next</a></td></tr></table><hr /></div><div class="refentry" lang="en" xml:lang="en"><a id="pg-conndefaults"></a><div class="titlepage"></div><div class="refnamediv"><h2><span class="refentrytitle">pg_conndefaults</span></h2><p>pg_conndefaults &#8212; Get connection options and their defaults</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><pre class="synopsis">
+pg_conndefaults
+</pre></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2564226"></a><h2>Description</h2><p>
+      <code class="function">pg_conndefaults</code> returns information about the
+      connection options available in <code class="function">pg_connect
+      -conninfo</code> and the current default value for each option.
+    </p></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2564249"></a><h2>Arguments</h2><p>
+      None
+    </p></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2564258"></a><h2>Return Value</h2><p>
+      The result is a list describing the possible connection options and
+      their current default values.  Each entry in the list is a sublist
+      of the format:
+</p><pre class="synopsis">
+{optname label dispchar dispsize value}
+</pre><p>
+      where the <em class="replaceable"><code>optname</code></em> is usable as an option in
+      <code class="function">pg_connect -conninfo</code>.
+    </p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="pg-disconnect.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="pgtcl-ref.html#pgtcl-ref-connection">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="pgtcl-ref-connstatus.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">pg_disconnect </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 4.2. Connection Status Commands</td></tr></table></div></body></html>

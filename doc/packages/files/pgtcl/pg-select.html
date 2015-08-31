@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" /><title>pg_select</title><link rel="stylesheet" href="stylesheet.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.70.1" /><link rel="start" href="index.html" title="Pgtcl Reference Manual" /><link rel="up" href="pgtcl-ref-query.html" title="4.3. Query Execution Commands" /><link rel="prev" href="pg-execute.html" title="pg_execute" /><link rel="next" href="pg-exec-params.html" title="pg_exec_params" /><link rel="copyright" href="ln-legalnotice.html" title="Legal Notice" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">pg_select</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="pg-execute.html">Prev</a> </td><th width="60%" align="center">4.3. Query Execution Commands</th><td width="20%" align="right"> <a accesskey="n" href="pg-exec-params.html">Next</a></td></tr></table><hr /></div><div class="refentry" lang="en" xml:lang="en"><a id="pg-select"></a><div class="titlepage"></div><div class="refnamediv"><h2><span class="refentrytitle">pg_select</span></h2><p>pg_select &#8212; Execute an SQL command on the server and loop over the results</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><pre class="synopsis">
+pg_select <em class="parameter"><code>conn</code></em> <em class="parameter"><code>commandString</code></em> <em class="parameter"><code>arrayVar</code></em> <em class="parameter"><code>procedure</code></em>
+</pre></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2565623"></a><h2>Description</h2><p>
+<code class="function">pg_select</code> submits a query (<span><strong class="command">SELECT</strong></span>
+statement) to the PostgreSQL server and executes
+a given chunk of code for each row in the result.  The
+<em class="replaceable"><code>commandString</code></em> must be a <span><strong class="command">SELECT</strong></span>
+statement; anything else returns an error.  The
+<em class="replaceable"><code>arrayVar</code></em> variable is an array name used in the loop.
+For each row, <em class="replaceable"><code>arrayVar</code></em> is filled in with the row
+values, using the column names as the array indices.  Then the
+<em class="replaceable"><code>procedure</code></em> is executed.
+    </p><p>
+      In addition to the column values, the following special entries are
+      made in the array:
+
+      </p><div class="variablelist"><dl><dt><span class="term"><code class="literal">.headers</code></span></dt><dd><p>
+              A list of the column names returned by the query.
+            </p></dd><dt><span class="term"><code class="literal">.numcols</code></span></dt><dd><p>
+              The number of columns returned by the query.
+            </p></dd><dt><span class="term"><code class="literal">.tupno</code></span></dt><dd><p>
+              The current row number, starting at zero and incrementing for
+              each iteration of the loop body.
+            </p></dd></dl></div><p>
+    </p></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2565728"></a><h2>Arguments</h2><div class="variablelist"><dl><dt><span class="term"><em class="replaceable"><code>conn</code></em></span></dt><dd><p>
+            The handle of the connection on which to execute the command.
+          </p></dd><dt><span class="term"><em class="replaceable"><code>commandString</code></em></span></dt><dd><p>
+            The SQL query to execute.
+          </p></dd><dt><span class="term"><em class="replaceable"><code>arrayVar</code></em></span></dt><dd><p>
+            An array variable for returned rows.
+          </p></dd><dt><span class="term"><em class="replaceable"><code>procedure</code></em></span></dt><dd><p>
+            The procedure or script to run for each returned row.
+          </p></dd></dl></div></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2565798"></a><h2>Return Value</h2><p>
+      None
+    </p><p>
+      A Tcl error will be thrown if an error occurs communicating with
+      the database, or if there is an error processing the query, or
+      if the procedure body throws a Tcl error.
+    </p></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2565814"></a><h2>Notes</h2><p>
+      <a href="pg-execute.html" title="pg_execute"><span class="refentrytitle">pg_execute</span></a> is a newer command which provides more
+      features and is more flexible than <code class="function">pg_select</code>.
+    </p><p>
+      This command uses or emulates the PostgreSQL
+      <span class="application">libpq</span>
+      function <code class="function">PQexec</code>.
+    </p></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2565849"></a><h2>Examples</h2><p>
+      This examples assumes that the table <code class="classname">table1</code> has
+      columns <em class="structfield"><code>control</code></em> and
+      <em class="structfield"><code>name</code></em> (and perhaps others):
+</p><pre class="programlisting">
+pg_select $conn "SELECT * FROM table1" array {
+    puts [format "%5d %s" $array(control) $array(name)]
+}
+</pre><p>
+    </p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="pg-execute.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="pgtcl-ref-query.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="pg-exec-params.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">pg_execute </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> pg_exec_params</td></tr></table></div></body></html>

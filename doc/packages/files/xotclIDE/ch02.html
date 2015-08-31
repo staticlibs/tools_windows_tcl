@@ -1,0 +1,338 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter 2. Getting Started Tutorial</title><meta name="generator" content="DocBook XSL Stylesheets V1.68.1"><link rel="start" href="index.html" title="XOTclIDE User Guide"><link rel="up" href="index.html" title="XOTclIDE User Guide"><link rel="prev" href="ch01s04.html" title="Ancestry"><link rel="next" href="ch02s02.html" title="Object-Orientation with XOTcl Components and Object Introspection - Tutorial"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter 2. Getting Started Tutorial</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch01s04.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="ch02s02.html">Next</a></td></tr></table><hr></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="fiststep"></a>Chapter 2. Getting Started Tutorial</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="sect1"><a href="ch02.html#id2926432">Developing Your First Application - Tutorial</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch02.html#id2926447">Starting XOTclIDE</a></span></dt><dt><span class="sect2"><a href="ch02.html#id2926635">Creating new Components</a></span></dt><dt><span class="sect2"><a href="ch02.html#id2926274">Adding Tcl procedures</a></span></dt><dt><span class="sect2"><a href="ch02.html#id2926800">Interactive work with procedures</a></span></dt><dt><span class="sect2"><a href="ch02.html#id2926882">Saving Component in File System</a></span></dt><dt><span class="sect2"><a href="ch02.html#id2940428">Using Components without XOTclIDE</a></span></dt><dt><span class="sect2"><a href="ch02.html#id2940457">Loading a Package or Component from File System</a></span></dt><dt><span class="sect2"><a href="ch02.html#id2940536">Creating Configuration Maps and Distributing Programs</a></span></dt><dt><span class="sect2"><a href="ch02.html#id2940719">Evaluating Short Tcl Scripts</a></span></dt><dt><span class="sect2"><a href="ch02.html#id2979858">Advanced Usage: Overview</a></span></dt></dl></dd><dt><span class="sect1"><a href="ch02s02.html">Object-Orientation with XOTcl Components and Object Introspection - Tutorial</a></span></dt><dd><dl><dt><span class="sect2"><a href="ch02s02.html#id2979957">Load Sample Application</a></span></dt><dt><span class="sect2"><a href="ch02s02.html#id2980041">Create an Instance of a Class</a></span></dt><dt><span class="sect2"><a href="ch02s02.html#id2980122">Object Inspector</a></span></dt></dl></dd></dl></div><p>
+This chapter describes the first steps in using XOTclIDE.
+You will learn how to write your first XOTclIDE application, and how to save and reload it.
+</p><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2926432"></a>Developing Your First Application - Tutorial</h2></div></div></div><p>
+In this section you will learn how to manage the basic tasks of programming with the XOTclIDE: how to create a new project (component), how to add new source, how to save the project and how to reload it.
+This section assumes a basic knowledge of Tcl and programming tools and is designed for programmers with some experience with Tcl or XOTcl.
+</p><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2926447"></a>Starting XOTclIDE</h3></div></div></div><p>
+Change to your chosen working directory and start XOTclIDE.tcl in it.
+The command line to start XOTclIDE depends on your installation. For example, using a Linux RPM installation:
+
+
+</p><pre class="screen">
+[artur@rybnik xotclIDE]$ tclsh /usr/local/lib/xotclIDE/XotclIDE.tcl
+or
+[artur@rybnik xotclIDE]$ /usr/local/lib/xotclIDE/XotclIDE.tcl
+</pre><p>
+On Windows systems you can just click on XOTclIDE.tcl.
+</p><p>
+After loading two windows appear.
+One window is the 
+<span><strong class="command">Transcript</strong></span> window with a welcome message. This is used to display system messages and evaluate short scripts.
+The second window is the
+<span><strong class="command">Component Browser</strong></span>, the main browser used to explore and modify your system structure and program code.
+</p><p>
+The Component Browser is divided into five panes: Component, Classes/Object/Tcl Procs Groups, Categories, Methods and Text Editor. 
+The four upper list-views correspond to source code structures within XOTclIDE.
+Each of the four has an associated menu.
+The highest level structure is a Component.
+A Component has a specific name and is a container for Classes, Objects and Tcl-Procedures-Groups.
+Each Class can have instance methods or class methods, corresponding respectively to XOTcl's instprocs and procs.
+These methods can be grouped together in Categories.
+Standard non object oriented Tcl procedures can be part of a Component when grouped in Tcl-Procedures-Groups.
+Individual Tcl procedures may not belong to Categories.
+The Methods pane lists the names of methods (procs and instprocs) in the selected Class and Category.
+The three levels (Component, Class/Object/Tcl-Procedures-Group, and Category) may be used to practice component oriented programming (More Information 
+<a href="ch03s03.html" title="Building an Application">the section called “Building an Application”</a>).
+</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Exercise</h3><p>Select component IDECore in the
+<span class="guilabel">Components</span> list view.
+In the <span class="guilabel">Class/Objects</span> list view all classes contained in this component will be listed. 
+Select class <code class="classname">IDE::Component</code> in the <span class="guilabel">Class/Objects</span> list view.
+Select category <span class="guilabel">_all_categories</span> in 
+<span class="guilabel">Categories</span> list view. Select method 
+<code class="methodname">getObjectDefineList</code> in the
+<span class="guilabel">Methods</span> list view.
+In the editor area the body (source code) of this method will appear.
+The browser will look like screen-shot 
+<a href="ch02.html#componentBrowser" title="Figure 2.1. Component Browser">Figure 2.1, “Component Browser”</a>.
+The blue background of the <span class="guibutton">Source</span> button in the right lower corner indicates that this method has a programmer comment.
+Press it to see this comment.
+The editor changes to comment view.
+Press the button again to change back to source view.
+Press button <span class="guibutton">Objects</span> in the <span class="guilabel">Class/Objects</span> list view to see another type of element of this component.
+</p></div><p>
+</p><div class="figure"><a name="componentBrowser"></a><p class="title"><b>Figure 2.1. Component Browser</b></p><div class="mediaobject"><img src="compbrowser_fstep.png" alt="Component Browser"></div></div><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2926635"></a>Creating new Components</h3></div></div></div><p>
+Programming in XOTclIDE is component oriented.
+Assume that you want to write simple program as follows.
+</p><pre class="programlisting">
+# This procedure dump elements of global array Tcl_platform
+# to file with name specified by parameter "file"
+proc generateTclPlatformProtocol {file} {
+     global tcl_platform
+     set fhandler [open $file w]
+     foreach key [array names tcl_platform] {
+         puts $fhandler "$key = $tcl_platform($key)"
+     }
+     close $fhandler
+}
+generateTclPlatformProtocol tclPlatform.log
+</pre><p>
+A regular Tcl-Programmer would open his favorite editor, type the text and save it as a Tcl script.
+Perhaps he would not create the procedure generateTclPlatformProtocol but would program it directly in the global context as follows:
+
+</p><pre class="programlisting">
+set fhandler [open  tclPlatform.log  w]
+foreach key [array names tcl_platform] {
+     puts $fhandler "$key = $tcl_platform($key)"
+}
+close $fhandler
+</pre><p>
+This can be good for small scripts. To program larger systems or to create reusable code a good programmer would prefer to write a Tcl-package like this:
+</p><pre class="programlisting">
+package provide PlatformLogDumper 0.1
+# This procedure dump elements of global array tcl_platform
+# to file with name specified by parameter "file"
+proc generateTclPlatformProtocol {file} {
+     global tcl_platform
+     set fhandler [open $file w]
+     foreach key [array names tcl_platform] {
+         puts $fhandler "$key = $tcl_platform($key)"
+     }
+     close $fhandler
+}
+</pre><p>
+You would also need to create a file 
+<code class="filename">pkgIndex.tcl</code> and add its directory to the Tcl <code class="varname">auto_path</code> global variable.
+You can use the package as follows
+</p><pre class="programlisting">
+package require PlatformLogDumper
+generateTclPlatformProtocol tclPlatform.log
+</pre><p>
+The Tcl package mechanism allows the function library definition to be separated from the function call.
+</p><div class="important" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Important</h3><p>
+XOTclIDE Components are normal Tcl packages that contain additional meta information that is handled by XOTclIDE.
+</p></div><p>
+Let's make make a first Component.
+Choose menu
+<span class="guimenu">Component</span>-&gt;<span class="guimenuitem">New</span>
+from <span><strong class="command">Component Browser</strong></span>.
+In the dialog enter the name of the new component 
+“<span class="quote">PlatformLogDumper</span>” and click the apply button.
+Your new component will appear in the list of components.
+In the next section you will learn how to add procedures to this component.
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2926274"></a>Adding Tcl procedures</h3></div></div></div><p>
+Your new created component appears in the 
+<span class="guilabel">Components</span> list view.
+Select it.
+Now create a new Tcl-Procedures-Group using the menu
+<span class="guimenu">Class</span>-&gt;<span class="guisubmenu">Tcl Procs Group</span>-&gt;<span class="guimenuitem">New Group</span>.
+In the dialog type the name of the group.
+</p><p>
+The name of the newly created Tcl-Procedures-Group will appear in the 
+<span><strong class="command">Class/Objects</strong></span> list view.
+Select it.
+New you can create your procedure.
+Select menu
+<span class="guimenu">Method</span>-&gt;<span class="guisubmenu">New Method Template</span>
+In the editor window the template for a Tcl procedure will appear as follows:
+</p><pre class="programlisting">
+proc procName {args} {
+    # enter the body here
+}
+</pre><p>
+Type your new procedure.
+When you are ready you must add the procedure to the interpreter.
+Use menu or key accelerator
+<span class="guimenu">Edit</span>-&gt;<span class="guisubmenu">Save/Apply</span> (<span><strong class="shortcut"><span class="keysym">Control-s</span></strong></span>)
+Your 
+<span><strong class="command">Component Browser</strong></span> will appear as follows:
+<a href="ch02.html#createComponent" title="Figure 2.2. Create Component">Figure 2.2, “Create Component”</a>
+</p><div class="figure"><a name="createComponent"></a><p class="title"><b>Figure 2.2. Create Component</b></p><div class="mediaobject"><img src="tutFirstProc.png" alt="Create Component"></div></div><p>
+</p><p>
+If you want to create a comment for this procedure press the <span class="guibutton">Source</span> button in the right lower edge of the edit area.
+The editor pane will change to comment view.
+Type a comment and apply it with
+
+<span class="guimenu">Edit</span>-&gt;<span class="guisubmenu">Save/Apply</span> (<span><strong class="shortcut"><span class="keysym">Control-s</span></strong></span>)
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2926800"></a>Interactive work with procedures</h3></div></div></div><p>
+The main advantage of XOTclIDE is that it is not only an editor for Tcl scripts but it 
+“<span class="quote">sits</span>” directly on a Tcl-Interpreter.
+Tcl for XOTclIDE is the same as Lisp for Emacs.
+You can try (invoke, call) a procedure immediately after you define it.
+Select the procedure and choose the menu
+
+<span class="guimenu">Method</span>-&gt;<span class="guisubmenu">Invoke</span>
+You will be ask to specify the parameters for the procedure call.
+In Tcl everything is a string so it is no problem just to type the parameters in the dialog as Tcl words (e.g 
+“<span class="quote">2 {2 3}</span>” are two parameters)
+</p><p>
+</p><div class="figure"><a name="invokeProcedure"></a><p class="title"><b>Figure 2.3. Invoking Procedures</b></p><div class="mediaobject"><img src="invokeProcDialog.png" alt="Invoking Procedures"></div></div><p>
+The result is returned as result text.
+If the result is an XOTcl object or list of XOTcl objects the object inspector will be displayed.
+If the result is an empty string then a special message box is shown.
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2926882"></a>Saving Component in File System</h3></div></div></div><p>
+To save your new component in the file system use the menu 
+<span><strong class="command">Component Browser</strong></span>
+<span class="guimenu">Component</span>-&gt;<span class="guimenuitem">Save Components</span>.
+In the dialog box select your component and check the button 
+<span class="guilabel">create pkgIndex</span>
+(see 
+<a href="ch02.html#savingComponents" title="Figure 2.4. Saving Components">Figure 2.4, “Saving Components”</a>).
+
+</p><div class="figure"><a name="savingComponents"></a><p class="title"><b>Figure 2.4. Saving Components</b></p><div class="mediaobject"><img src="saveComponents.png" alt="Saving Components"></div></div><p>
+After accepting dialog a package file 
+<code class="filename">PlatformLogDumper.xotcl</code> will be saved in a filesystem directory.
+The file should look as follows.
+
+</p><pre class="programlisting">
+# automatically generated from XOTclIDE
+package provide PlatformLogDumper 0.1
+
+@ tclproc generateTclPlatformProtocol idemeta struct \
+PlatformLogDumper MyGroup
+proc generateTclPlatformProtocol file {
+     global tcl_platform
+     set fhandler [open $file w]
+     foreach key [array names tcl_platform] {
+           puts $fhandler "$key = $tcl_platform($key)"
+     }
+     close $fhandler
+}
+</pre><p>
+Note that the component was saved as a “<span class="quote">regular</span>” Tcl package.
+The one difference is the line
+beginning with @.
+This is XOTcl notation for meta-data and is used in XOTclIDE to code additional structure information.
+To use this package from pure Tcl you can check the button 
+<span class="guilabel">no meta data @</span> before saving the component or define a dummy proc to ignore the meta-data as follows
+
+</p><pre class="programlisting">
+proc @ args {}
+</pre><p>
+The checked option 
+<span class="guilabel">create pkgIndex</span> caused the generation of the file
+<code class="filename">pkgIndex.tcl</code> in the same directory as the package.
+</p><pre class="programlisting">
+# Tcl package index file, version 1.1
+# This file is generated by the "pkg_mkIndex -direct" command
+# and sourced either when an application starts up or
+# by a "package unknown" script.
+It invokes the
+# "package ifneeded" command to set up package-related
+# information so that packages will be loaded automatically
+# in response to "package require" commands.
+When this
+# script is sourced, the variable $dir must contain the
+# full path name of this file's directory.
+package ifneeded PlatformLogDumper 0.1 \
+[list source [file join $dir PlatformLogDumper.xotcl]]
+</pre><p>
+In this index file appear all packages from the directory with names that match the pattern *.xotcl.
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2940428"></a>Using Components without XOTclIDE</h3></div></div></div><p>
+As mentioned above, XOTclIDE components are normal Tcl packages.
+To use them from Tcl scripts you need first to register the package in Tcl package system by setting the
+<code class="varname">auto_path</code> global variable. If you do not use XOTcl, define a dummy procedure to ignore @ lines.
+Here is a sample usage from the tcl shell.
+
+</p><pre class="programlisting">
+[artur@localhost own_oxtcl]$ tcl
+tcl&gt;proc @ args {}
+tcl&gt;lappend auto_path .
+/usr/share/tcl8.3 /usr/share /usr/lib /usr/share/tclX8.3 .
+tcl&gt;package require PlatformLogDumper
+0.1
+tcl&gt;generateTclPlatformProtocol out.log
+</pre><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2940457"></a>Loading a Package or Component from File System</h3></div></div></div><p>
+To load a package or component into XOTclIDE use the menu
+
+<span class="guimenu">Component</span>-&gt;<span class="guimenuitem">Load Package</span>.
+If you do not see your component in the package list, this means Tcl is unable find the package.
+The package list is generated using the Tcl
+<span><strong class="command">package names</strong></span> command which uses the <code class="varname">auto_path</code> variable as a list of directories to search for packages.
+XOTclIDE adds the current working directory to the
+<code class="varname">auto_path</code> list at start time.
+One way to load your package is to change into the directory with your packages before starting XOTclIDE.
+</p><p>
+Normally you do not need to worry about how the components are saved or loaded in the filesystem or how a component is represented in text.
+You can install your component in Tcl distribution subdirectory.
+Read the Tcl 
+<span><strong class="command">package</strong></span> command manual for more about the package mechanism in Tcl.
+
+</p><div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Warning</h3><p>
+It can be quite tricky to force Tcl to find and load packages you need.
+Some people use the phrase
+“<span class="quote">Package Hell</span>”.
+The package list are built only once and cannot be rebuilt if you change packages dynamically.
+You will need to restart XOTclIDE to load packages you have just created if your components are stored as files.
+You would not have this problem if you use XOTclIDE's Version Control.
+</p></div><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2940536"></a>Creating Configuration Maps and Distributing Programs</h3></div></div></div><p>
+Components in XOTclIDE are like function- or class libraries in other systems.
+You can build your application as one or more components.
+You also need an application starting script that contains
+a line like this
+
+</p><pre class="programlisting">
+generateTclPlatformProtocol out.log
+</pre><p>
+You can of course write you own start script as follows and save it as a file
+
+</p><pre class="programlisting">
+lappend auto_patch $pathToComponentFile
+proc @ args {}
+package require PlatformLogDumper 
+generateTclPlatformProtocol out.log
+</pre><p>
+Alternatively, XOTclIDE supports configuration maps that group components together and specify a start script.
+A configuration map specifies
+
+</p><div class="itemizedlist"><ul type="disc"><li><p>Components to load (the order to load and how they should be loaded from file-system or version control system)</p></li><li><p>preStartScript - a script that will be evaluated before loading components</p></li><li><p>startScript - a script that starts the application after components are loaded</p></li></ul></div><p>
+Configuration maps may be also used to deploy applications.
+
+</p><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3><p>
+
+“<span class="quote">Configuration maps</span>” correspond to project or 
+“<span class="quote">solution maps</span>” in other IDEs.
+</p></div><p>
+To specify a configuration map you use the 
+<span><strong class="command">Configuration MapBrowser</strong></span> that can be started from the menu
+
+<span class="guimenu">System</span>-&gt;<span class="guimenuitem">Configuration Map Browser</span>.
+
+</p><div class="figure"><a name="configurationMap"></a><p class="title"><b>Figure 2.5. Configurations Map Browser</b></p><div class="mediaobject"><img src="firstconfigmap.png" alt="Configurations Map Browser"></div></div><p>
+Do not forget to apply the start script from the menu
+
+<span class="guimenu">Edit</span>-&gt;<span class="guimenuitem">Save/Apply</span> (<span><strong class="shortcut"><span class="keysym">Control-s</span></strong></span>).
+After defining a configuration map you can save it as a configuration map file
+(extension .cfmap).
+</p><p>
+You can set this configmap file as a start parameter of XOTclIDE so all components from this configuration map are loaded at starting time.
+
+</p><pre class="screen">
+[artur@localhost own_oxtcl]$ XotclIDE.tcl -- -configmap platformLogDumper.cfmap
+</pre><p>
+If you develop a big application it's a good idea to define a configuration map and use it as a start parameter.
+(see 
+<a href="ch03s04.html#ConfigurationManagment" title="Configuration Management and Deploying">the section called “Configuration Management and Deploying”</a> for more informations)
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2940719"></a>Evaluating Short Tcl Scripts</h3></div></div></div><p>
+Tcl is often used to write short ad hoc programs called scripts (Scripting Language).
+Scripts are often sequences of simple Tcl commands that are evaluated in the global context.
+Often no procedures are defined in such scripts.
+</p><p>
+Every Editor Text Area in XOTclIDE has the ability to evaluate short scripts.
+To run (evaluate) the script just select the script text and invoke it 
+from the pop-down menu (Right mouse-button) or the menu 
+<span class="guimenu">Editor</span>.
+</p><p>
+You can load and manage your scripts by using
+<span><strong class="command">Workspace</strong></span> windows.
+To open a 
+<span><strong class="command">Workspace</strong></span> use the menu
+
+<span class="guimenu">System</span>-&gt;<span class="guimenuitem">Workspace</span>
+A <span><strong class="command">Workspace</strong></span> is simply a text area (simple Editor) that can be used to type scripts, save or load them from the file system.
+It can be also used as a temporary 
+“<span class="quote">scratch pad</span>”, to enter and evaluate expressions during the process of testing new method definitions.
+
+</p><div class="figure"><a name="Workspace"></a><p class="title"><b>Figure 2.6. Workspace</b></p><div class="mediaobject"><img src="workspace.png" alt="Workspace"></div></div><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2979858"></a>Advanced Usage: Overview</h3></div></div></div><p>
+The tutorial above describes how to get your first results with XOTclIDE.
+The main advantages of this system can be seen by using the advanced features of XOTclIDE:
+
+</p><div class="variablelist"><dl><dt><span class="term">Version Control System</span></dt><dd><p>integrated object oriented version control system lets you track all changes in a project and restore old versions (
+<a href="ch04.html#versionControl" title="Version Control System">the section called “Version Control System”</a>).</p></dd><dt><span class="term">Object orientation with XOTcl</span></dt><dd><p>XOTclIDE was developed primarilyy to support object oriented development with XOTcl.
+Many features - e.g. the object inspector - are XOTcl specific.</p></dd><dt><span class="term">System Introspection</span></dt><dd><p>XOTclIDE lets you inspect and change all objects and variables in the system</p></dd><dt><span class="term">Debugging</span></dt><dd><p>With the extended debugger extension you can debug your program with a professional system.
+Conditional breakpoints, program stepping, program stack introspection are possible (<a href="ch04s04.html" title="Debugging">the section called “Debugging”</a>).</p></dd></dl></div><p>
+</p></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch01s04.html">Prev</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="ch02s02.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Ancestry </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Object-Orientation with XOTcl Components and Object Introspection - Tutorial</td></tr></table></div></body></html>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" /><title>pg_lo_lseek</title><link rel="stylesheet" href="stylesheet.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.70.1" /><link rel="start" href="index.html" title="Pgtcl Reference Manual" /><link rel="up" href="pgtcl-ref-largeobj.html" title="4.6. Large Object Processing Commands" /><link rel="prev" href="pg-lo-write.html" title="pg_lo_write" /><link rel="next" href="pg-lo-tell.html" title="pg_lo_tell" /><link rel="copyright" href="ln-legalnotice.html" title="Legal Notice" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">pg_lo_lseek</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="pg-lo-write.html">Prev</a> </td><th width="60%" align="center">4.6. Large Object Processing Commands</th><td width="20%" align="right"> <a accesskey="n" href="pg-lo-tell.html">Next</a></td></tr></table><hr /></div><div class="refentry" lang="en" xml:lang="en"><a id="pg-lo-lseek"></a><div class="titlepage"></div><div class="refnamediv"><h2><span class="refentrytitle">pg_lo_lseek</span></h2><p>pg_lo_lseek &#8212; Seek to a position of a large object</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><pre class="synopsis">
+pg_lo_lseek <em class="parameter"><code>conn</code></em> <em class="parameter"><code>descriptor</code></em> <em class="parameter"><code>offset</code></em> <em class="parameter"><code>whence</code></em>
+</pre></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2572073"></a><h2>Description</h2><p>
+      <code class="function">pg_lo_lseek</code> moves the current read/write
+      position to <em class="replaceable"><code>offset</code></em> bytes from the position
+      specified by <em class="replaceable"><code>whence</code></em>.
+    </p></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2572096"></a><h2>Arguments</h2><div class="variablelist"><dl><dt><span class="term"><em class="replaceable"><code>conn</code></em></span></dt><dd><p>
+            The handle of the connection.
+          </p></dd><dt><span class="term"><em class="replaceable"><code>descriptor</code></em></span></dt><dd><p>
+            A descriptor for the large object from <a href="pg-lo-open.html" title="pg_lo_open"><span class="refentrytitle">pg_lo_open</span></a>.
+          </p></dd><dt><span class="term"><em class="replaceable"><code>offset</code></em></span></dt><dd><p>
+            The new seek position in bytes.
+          </p></dd><dt><span class="term"><em class="replaceable"><code>whence</code></em></span></dt><dd><p>
+            Specified from where to calculate the new seek position:
+            <code class="literal">SEEK_CUR</code> (from current position),
+            <code class="literal">SEEK_END</code> (from end), or
+            <code class="literal">SEEK_SET</code> (from start).
+          </p></dd></dl></div></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2572187"></a><h2>Return Value</h2><p>
+      The current zero-based byte offset in the large object, after the seek
+      is complete. This is identical to the value which would be returned by
+      <a href="pg-lo-tell.html" title="pg_lo_tell"><span class="refentrytitle">pg_lo_tell</span></a>.
+    </p><p>
+      A Tcl error will be thrown if an error occurs.
+    </p></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2572208"></a><h2>Notes</h2><p>
+      All large object manipulation must take place within an SQL transaction
+      block.
+    </p><p>
+      This command uses or emulates the PostgreSQL
+      <span class="application">libpq</span>
+      function <code class="function">lo_lseek</code>.
+    </p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="pg-lo-write.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="pgtcl-ref-largeobj.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="pg-lo-tell.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">pg_lo_write </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> pg_lo_tell</td></tr></table></div></body></html>

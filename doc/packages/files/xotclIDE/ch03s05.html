@@ -1,0 +1,112 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Source Editing</title><meta name="generator" content="DocBook XSL Stylesheets V1.68.1"><link rel="start" href="index.html" title="XOTclIDE User Guide"><link rel="up" href="ch03.html" title="Chapter 3. Programming with XOTclIDE"><link rel="prev" href="ch03s04.html" title="Browsers and Inspectors"><link rel="next" href="ch04.html" title="Chapter 4. Extended Features"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Source Editing</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch03s04.html">Prev</a> </td><th width="60%" align="center">Chapter 3. Programming with XOTclIDE</th><td width="20%" align="right"> <a accesskey="n" href="ch04.html">Next</a></td></tr></table><hr></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2981952"></a>Source Editing</h2></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2981957"></a>Basic Editor Function</h3></div></div></div><p>
+The XOTclIDE editor is based on a Tk Text widget.
+The following functions are available.
+</p><div class="variablelist"><dl><dt><span class="term">Cut Text</span></dt><dd><p>Key Accelerator
+<span><strong class="keycap">Control</strong></span>-<span><strong class="keycap">x</strong></span>
+</p></dd><dt><span class="term">Copy Text</span></dt><dd><p>Key Accelerator
+<span><strong class="keycap">Control</strong></span>-<span class="mousebutton">c</span>
+</p></dd><dt><span class="term">Paste Text</span></dt><dd><p>Key Accelerator
+<span><strong class="keycap">Control</strong></span>-<span class="mousebutton">v</span>
+</p></dd><dt><span class="term">Undo</span></dt><dd><p>Key Accelerator
+<span><strong class="keycap">Control</strong></span>-<span class="mousebutton">z</span> available only with Tcl8.4</p></dd></dl></div><p>
+To see other accelerators see the Tk Text Widget documentation.
+<a href="http://purl.org/tcl/home/man/tcl8.4/TkCmd/text.htm" target="_top">text widget manual</a>.
+</p><p>
+Standard text find and replace dialogs are available in menu 
+<span class="guimenu">Edit</span>.
+To search for text in many methods use the menu in Browser 
+<span><strong class="command">Component Browser</strong></span>
+<span class="guimenu">Method</span>-&gt;<span class="guimenuitem">Search Text</span> (<span><strong class="shortcut"><span class="keysym">F4</span></strong></span>).
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2982133"></a>Code Completion</h3></div></div></div><p>
+It works like file name competition in bash (Unix Shell) or code completion in
+typed program language IDEs.
+The user can type the first character of token than press 
+<span class="keycode">Tab</span> or 
+<span class="keycode">Control-Space</span>. XOTclIDE tries to complete the token depending on its context.
+If many alternative completions are available a pop-down window list will be displayed.
+</p><div class="figure"><a name="CodeCompletion"></a><p class="title"><b>Figure 3.2. Code Completion</b></p><div class="mediaobject"><img src="compbrowser.png" alt="Code Completion"></div></div><p>
+</p><p>
+The following language tokens can be completed
+</p><div class="variablelist"><dl><dt><span class="term">Tcl Core-Commands</span></dt><dd><p>commands like: lappend list foreach</p></dd><dt><span class="term">Tcl Core-Commands parameters</span></dt><dd><p>for example string length|match|range</p></dd><dt><span class="term">Defined Tcl Procedures</span></dt><dd><p>all procedures known from info procs</p></dd><dt><span class="term">Defined XOTcl Classes and Object</span></dt><dd><p>all XOTcl Classes and Object in every namespace.</p></dd><dt><span class="term">local class methods</span></dt><dd><p>all methods (including methods derived from other classes) found by $instance info instprocs</p></dd><dt><span class="term">visible variables</span></dt><dd><p>variables defined per 
+<span><strong class="command">set append instvar foreach ...</strong></span> or method parameters. Just type $ and press the
+<span><strong class="keycap">Tab</strong></span> key</p></dd></dl></div><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2982288"></a>Navigation in Sources</h3></div></div></div><p>
+The Method menu in the Component Browser offers some additional help functions for browsing XOTcl/Tcl methods.
+You can return to the last shown method by Functions 
+“<span class="quote">Back Method (
+<span><strong class="keycap">Alt</strong></span>-<span><strong class="keycap">Left</strong></span>
+)</span>” or 
+“<span class="quote">Forward Method (
+<span><strong class="keycap">Alt</strong></span>-<span><strong class="keycap">Right</strong></span>
+)</span>” just like from your HTML browser.
+</p><p>
+Spawn View opens a new editor window with the same contents as the current edit area.
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2982344"></a>Syntax highlighting</h3></div></div></div><p>
+XOTclIDE implements two kinds of syntax highlighting:
+</p><div class="variablelist"><dl><dt><span class="term">Simple syntax highlighting</span></dt><dd><p>is based on regular expression patterns.
+It highlights only "", substitution and # comments.</p></dd><dt><span class="term">Parser-based syntax highlighting</span></dt><dd><p>This syntax highlighting gives a truer result.
+It highlights Tcl core-commands, variables, comments, "", substitution and XOTcl key-words.</p></dd></dl></div><p>
+</p><div class="figure"><a name="syntaxHightlight"></a><p class="title"><b>Figure 3.3. Syntax Highlighting</b></p><div class="mediaobject"><img src="syntaxhighlighting.png" alt="Syntax Highlighting"></div></div><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2982420"></a>Checking parentheses</h3></div></div></div><p>
+Finding opening or closing parentheses can be hard work in understanding some Tcl methods.
+Double-click on [{" or ]}" and XOTclIDE will find the corresponding opening or closing parenthesis for you and select it.
+
+
+</p><div class="figure"><a name="parentherisCheck"></a><p class="title"><b>Figure 3.4. Checking Parenthesis</b></p><div class="mediaobject"><img src="parenthesis.png" alt="Checking Parenthesis"></div></div><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2982466"></a>Automatic Indenting</h3></div></div></div><p>
+XOTclIDE tries to set the same indent in a newly inserted line as in the last line.
+If the last character before a new line is an opening parenthesis { then in the new line the indenting will be increased by four and a matching closing parenthesis will be inserted.
+</p><pre class="screen">
+foreach a $list {here cursor
+</pre><p>
+After a new line you will see this code
+</p><pre class="screen">
+foreach a $list {
+here cursor
+}
+</pre><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2982492"></a>Evaluate Tcl Scripts in Editor</h3></div></div></div><p>
+This is a very powerful function.
+It lets you evaluate Tcl scripts as in the Tclshell console
+but is more flexible.
+Simply select a string and evaluate it with the pop-down menu or
+key-accelerator.
+Now you will notice that in Tcl everything is a string.
+It is also the easiest and fastest way to program in XOTcl/Tcl.
+
+
+</p><div class="figure"><a name="evalPring"></a><p class="title"><b>Figure 3.5. Evaluate Scripts</b></p><div class="mediaobject"><img src="evalprint.png" alt="Evaluate Scripts"></div></div><p>
+
+The Menu 
+
+“<span class="quote">Print it</span>” corresponds to the Tcl 
+
+<span><strong class="command">eval</strong></span> command.
+You can also use Control-q.
+
+
+</p><div class="figure"><a name="substituteScript"></a><p class="title"><b>Figure 3.6. Substitute Scripts</b></p><div class="mediaobject"><img src="evalsubstitute.png" alt="Substitute Scripts"></div></div><p>
+Menu 
+
+“<span class="quote">Substitute it</span>” corresponds to the
+
+<span><strong class="command">subst</strong></span> Tcl command.
+
+
+</p><div class="figure"><a name="evalInspect"></a><p class="title"><b>Figure 3.7. Inspect Script Evaluation</b></p><div class="mediaobject"><img src="evalinspect.png" alt="Inspect Script Evaluation"></div></div><p>
+
+Menu 
+
+“<span class="quote">Inspect it</span>” evaluates the selected text and launches an inspector on the returned value if it is a XOTcl object.
+You can also use 
+
+<span class="keysym">Control-g</span>.
+If the result of the last operation is an XOTcl Object then
+it will be displayed in an Object inspector.
+</p><p>
+You can use Workspaces (see menu 
+
+
+<span class="guimenu">System</span>-&gt;<span class="guimenuitem">Workspace</span>
+) to evaluate short Tcl scripts.
+</p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch03s04.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="ch03.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ch04.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Browsers and Inspectors </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Chapter 4. Extended Features</td></tr></table></div></body></html>

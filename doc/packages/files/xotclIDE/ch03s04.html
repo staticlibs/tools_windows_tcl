@@ -1,0 +1,134 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Browsers and Inspectors</title><meta name="generator" content="DocBook XSL Stylesheets V1.68.1"><link rel="start" href="index.html" title="XOTclIDE User Guide"><link rel="up" href="ch03.html" title="Chapter 3. Programming with XOTclIDE"><link rel="prev" href="ch03s03.html" title="Building an Application"><link rel="next" href="ch03s05.html" title="Source Editing"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Browsers and Inspectors</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch03s03.html">Prev</a> </td><th width="60%" align="center">Chapter 3. Programming with XOTclIDE</th><td width="20%" align="right"> <a accesskey="n" href="ch03s05.html">Next</a></td></tr></table><hr></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="id2981234"></a>Browsers and Inspectors</h2></div></div></div><p>
+XOTclIDE was designed as a set of browsers that let you investigate your system in the way that you need for your task.
+Other IDEs offer one all purpose single window to access all functions which tend to be overloaded and complex.
+In software development you have many different tasks that need special views into your system.
+You need different views and functions for programming, debugging, version management, deployment, quality management, code review.
+These views should be similar enough to reuse user knowledge and offer consistent handling.
+Of course some browsers (for example the <span><strong class="command">Component Browser</strong></span>) will be used more often and should have more functionality.
+The right balance must be found between the two extremes - either one
+view with overloaded function or many views with only a few functions.
+This section presents all XOTclIDE browsers sorted by main programming task.
+</p><p>
+In XOTclIDE we distinguish between browsers and inspectors.
+A Browser offers a view on code definition (classes, methods and other).
+Inspectors allow the user to navigate through Tcl Interpreter data space.
+They can show the state of XOTcl Objects and global variables.
+</p><p>
+All browsers in XOTclIDE are built on the same principles.
+All browsers are divided (composed) into areas (panes).
+There can be many list areas (list-views) and one or more edit areas.
+Each view area has a corresponding pop-down menu in the main menu. Pop-up menus with the most used menu items let you reach needed functions in the place you need them.
+Many browser subcomponents (sub views) are reused in different browser windows with the same functionality.
+</p><p>
+Almost all component windows have a special 
+<span class="guimenu">System</span> menu that offers access for launching other browsers and reaching main IDE functions, like settings.
+</p><p>
+In XOTclIDE you can open one browser type several times.
+They work independently.
+Normally you will use more than one component browser to see different code at the same time.
+You can write a method call in one browser and open another browser to see the called method body.
+</p><div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Warning</h3><p>
+XOTclIDE Browsers use a passive 
+“<span class="quote">model view controller</span>”.
+If two browsers show the same code and in one of them the code is changed the changes are not updated automatically in the other view (browser).
+You can force the view to be updated by double-clicking on the list-view item.
+</p></div><p>
+</p><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2981324"></a>Writing Source</h3></div></div></div><p>
+</p><div class="variablelist"><dl><dt><span class="term">Component Browser</span></dt><dd><p>
+Probably the most used browser.
+It is suitable for viewing and changing components, classes (or object, Tcl-Proc-Groups), categories, procs or methods.
+With this browser you have access to all the source code in your system (definition space).
+The browser also has functions to search after a specific class in your system.
+</p></dd><dt><span class="term">Heritage Browser</span></dt><dd><p>This browser is suitable for examining and developing class hierarchies.
+The XOTcl language provides multiple inheritance -
+one class can have many parent classes.
+To visualize this relationship the parent classes are represented as leaves of a tree in this view.
+To see the inheritance of a class select it in the <span class="emphasis"><em>Component Browser</em></span> and use menu
+<span class="guimenu">Class</span>-&gt;<span class="guimenuitem">Heritage Browser</span>.
+You can also launch this browser with the
+<span class="guimenu">System</span>-&gt;<span class="guimenuitem">Heritage Browser</span> In this case you must specify (by Name or choice-list) the class name you want to view.
+</p></dd><dt><span class="term">Children Browser</span></dt><dd><p>This browser is suitable for examining and developing class hierarchies.
+Unlike the <span class="emphasis"><em>Heritage Browser</em></span> in this view the children of a class are shown.
+To see the descendants of a class select the <span class="emphasis"><em>Component Browser</em></span> and use menu
+<span class="guimenu">Class</span>-&gt;<span class="guimenuitem">Children Browser</span>.
+</p></dd><dt><span class="term">Method List Browser</span></dt><dd><p>
+This Browser is launched as a result of searching on method bodies.
+Menu
+<span class="guimenu">Method</span>-&gt;<span class="guimenuitem">Search ...</span>.
+</p></dd></dl></div><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2981481"></a>Refactoring</h3></div></div></div><p>
+Refactoring is a normal part of developing.
+We learn every day we develop.
+Refactoring allows transferring new knowledge to old code,
+and adapting old code for new purposes.
+</p><p>
+The main condition for successful refactoring is quick understanding of old code 
+that was probably written by another people.
+Code reading skills are important in this point.
+Since methods in object oriented system are relatively short,
+the main question is to know and find the context of their usage.
+To view the definition of a method that you see in a method body select the method's name in the editor and
+use menu
+<span class="guimenu">Method</span>-&gt;<span class="guimenuitem">Search Implementors</span>.
+If you want to know where a method is called from select it in <span><strong class="command">Methods</strong></span> view and
+use menu 
+<span class="guimenu">Method</span>-&gt;<span class="guimenuitem">Search Senders</span>. Also the function “<span class="quote">Browse it</span>” in Menu 
+<span class="guimenu">Method</span>-&gt;<span class="guimenuitem">Search Implementors</span> (<span><strong class="shortcut"><span class="keysym">Control-r</span></strong></span>) is very useful in finding symbol definitions.
+Just select a symbol (word) in any editor area and invoke it from the pop-up menu.
+The function first searches for a class or object name equal to the selected text, then for a method or procedure name.
+</p><p>
+The following refactoring functions are possible in XOTclIDE
+</p><div class="variablelist"><dl><dt><span class="term">Rename Component</span></dt><dd><p>Menu
+<span class="guimenu">Component</span>-&gt;<span class="guimenuitem">Rename</span>
+</p></dd><dt><span class="term">Moving Classes to Another Component</span></dt><dd><p>Menu
+<span class="guimenu">Class</span>-&gt;<span class="guimenuitem">Move to Component</span>
+</p></dd><dt><span class="term">Coping Classes/Objects</span></dt><dd><p>Menu
+<span class="guimenu">Class</span>-&gt;<span class="guimenuitem">Copy Class/Object</span>
+This function can be also used to rename a class.
+Just copy the class to a new name and delete the old class.
+</p></dd><dt><span class="term">Extract method body parts</span></dt><dd><p>Menu
+<span class="guimenu">Method</span>-&gt;<span class="guimenuitem">Selection to new method</span>
+This task is normally done if the method becomes too long and you want to divide it into smaller
+methods.
+This function cannot resolve the correct variable definitions and functions parameters.
+</p></dd><dt><span class="term">Rename method name</span></dt><dd><p>
+There is no direct function for it.
+Select the method, then in the editor type a new name in method body, and then accept the change in the editor.
+The new method will be added. The old one must be removed with the delete function.
+</p></dd></dl></div><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2981717"></a>Debugging running Systems</h3></div></div></div><p>
+</p><div class="variablelist"><dl><dt><span class="term">Debugger</span></dt><dd><p>This is a pure Tcl debugger. Call 
+“<span class="quote">::xotcl::Object halt</span>” in the method body.</p></dd><dt><span class="term">Object Inspector</span></dt><dd><p>
+In the Object Inspector you can view and change variables of an XOTcl object.
+It also has method lists that can be used to invoke methods on objects.
+To launch the object inspector
+<span class="guimenu">Class</span>-&gt;<span class="guimenuitem">Inspect All Instances</span>
+You can also call method 
+<span class="emphasis"><em>inspect</em></span> on every XOTcl object.
+</p></dd></dl></div><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="versionCotrolBrowsers"></a>Version Control</h3></div></div></div><p>
+If you start XOTclIDE with version control the browsers
+offer additional functions for managing version control.
+The component, class and method areas (views) have an additional sub menu
+<span class="emphasis"><em>Version Control</em></span>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="ConfigurationManagment"></a>Configuration Management and Deploying</h3></div></div></div><p>
+</p><div class="variablelist"><dl><dt><span class="term">Configuration Map Browser</span></dt><dd><p>
+Launch from the menu
+<span class="guimenu">System</span>-&gt;<span class="guimenuitem">Configuration Map Browser</span>
+</p></dd><dt><span class="term">Configuration Browser</span></dt><dd><p>
+Available only if you started XOTclIDE with Version Control
+<span class="guimenu">System</span>-&gt;<span class="guisubmenu">Version Control</span>-&gt;<span class="guimenuitem">Configuration Browser</span>
+</p></dd></dl></div><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2981877"></a>Special Browsers</h3></div></div></div><p>
+</p><div class="variablelist"><dl><dt><span class="term">Transcript</span></dt><dd><p>
+This is a main singleton edit area that is either used to display system messages
+(per command: Transcript message "Hallo World") or to evaluate short Tcl scripts.
+</p></dd><dt><span class="term">Workspace</span></dt><dd><p>
+It is a simple edit area that can be used to evaluate Tcl scripts.
+You can load text files into a workspace or save the contents into a text file.
+</p></dd><dt><span class="term">Global Variable Inspector</span></dt><dd><p>
+Access from the menu
+<span class="guimenu">System</span>-&gt;<span class="guimenuitem">Global Vars Inspector</span>
+It can be used to inspect all global variables, or namespace variables.
+</p></dd></dl></div><p>
+</p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch03s03.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="ch03.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ch03s05.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Building an Application </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Source Editing</td></tr></table></div></body></html>

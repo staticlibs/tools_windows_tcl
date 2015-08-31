@@ -1,0 +1,61 @@
+<! -- -*- tcl -*- doctools
+   -->
+<html><head><title>random - Memory channels </title></head>
+<! -- Generated from file 'random.man' by tcllib/doctools with format 'html'
+   -->
+<! -- Copyright (c) 2004 Pat Thoyts &lt;patthoyts@users.sourceforge.net&gt;
+   -->
+<! -- CVS: $Id$ random.n
+   -->
+
+<h1> random(n) 2.2  &quot;Memory channels&quot;</h1>
+<a name="name"><h2>NAME</h2>
+<p> random - Create and manipulate randomizer channels
+
+
+
+
+
+<a name="synopsis"><h2>SYNOPSIS</h2>
+package require <b>Tcl</b><br>
+package require <b>memchan</b><br>
+<br><table border=1 width=100% cellspacing=0 cellpadding=0><tr            bgcolor=lightyellow><td bgcolor=lightyellow><table 0 width=100% cellspacing=0 cellpadding=0><tr valign=top ><td ><b class='cmd'>random</b> </td></tr>
+</table></td></tr></table>
+<a name="description"><h2>DESCRIPTION</h2>
+
+<dl>
+
+<dt><b class='cmd'>random</b> <dd>
+
+
+creates a random channel which absorbs everything written into it and
+uses it as a seed for a random number generator. This generator is
+used to create a random sequence of bytes when reading from the
+channel. It is not possible to seek the channel.
+
+</dl>
+
+<a name="options"><h2>OPTIONS</h2>
+
+Memory channels created by <b class='cmd'>random</b> provide one additional option to
+set or query.
+
+<dl>
+
+    <dt><i class='arg'>-delay ?milliseconds?</i><dd>
+
+    A <b class='cmd'>random</b> channel is always writable and readable. This means
+    that all <b class='cmd'>fileevent</b>-handlers will fire continuously.  To
+    avoid starvation of other event sources the events raised by this
+    channel type have a configurable delay. This option is set in
+    milliseconds and defaults to 5.
+
+</dl>
+
+<a name="seealso"><h2>SEE ALSO</h2>
+memchan, fifo, fifo2, null, zero
+<a name="keywords"><h2>KEYWORDS</h2>
+random, in-memory channel, channel, i/o
+<a name="copyright"><h2>COPYRIGHT</h2>
+Copyright (c) 2004 Pat Thoyts &lt;patthoyts@users.sourceforge.net&gt;<br>
+</body></html>

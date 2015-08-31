@@ -1,0 +1,13 @@
+#!/svn/trunk/wintcltk/src/instroot/bin/tclsh85.exe
+if {$argc == 0} {
+  puts "Don't use [info script] as interactive shell! Use instead:"
+  puts "   /svn/trunk/wintcltk/src/instroot/bin/tclsh85.exe"
+  puts "   package require XOTcl; namespace import ::xotcl::*"
+} else {
+  package require XOTcl
+  namespace import ::xotcl::*
+  set argv0 [lindex $argv 0]
+  set argv  [lreplace $argv 0 0]
+  incr argc -1
+  source $argv0
+}

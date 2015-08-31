@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" /><title>pg_cancelrequest</title><link rel="stylesheet" href="stylesheet.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.70.1" /><link rel="start" href="index.html" title="Pgtcl Reference Manual" /><link rel="up" href="pgtcl-ref-async.html" title="4.4. Asynchronous Query Processing Commands" /><link rel="prev" href="pg-getresult.html" title="pg_getresult" /><link rel="next" href="pg-blocking.html" title="pg_blocking" /><link rel="copyright" href="ln-legalnotice.html" title="Legal Notice" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">pg_cancelrequest</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="pg-getresult.html">Prev</a> </td><th width="60%" align="center">4.4. Asynchronous Query Processing Commands</th><td width="20%" align="right"> <a accesskey="n" href="pg-blocking.html">Next</a></td></tr></table><hr /></div><div class="refentry" lang="en" xml:lang="en"><a id="pg-cancelrequest"></a><div class="titlepage"></div><div class="refnamediv"><h2><span class="refentrytitle">pg_cancelrequest</span></h2><p>pg_cancelrequest &#8212; Cancel an in-progress asynchronous query</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><pre class="synopsis">
+pg_cancelrequest <em class="parameter"><code>conn</code></em>
+</pre></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2570000"></a><h2>Description</h2><p>
+<code class="function">pg_cancelrequest</code> asks the database server to
+abandon processing of the current command issued by
+<a href="pg-sendquery.html" title="pg_sendquery"><span class="refentrytitle">pg_sendquery</span></a>.
+    </p></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2570020"></a><h2>Arguments</h2><div class="variablelist"><dl><dt><span class="term"><em class="replaceable"><code>conn</code></em></span></dt><dd><p>
+            The handle of the connection on which to cancel the current command.
+          </p></dd></dl></div></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2570046"></a><h2>Return Value</h2><p>
+      Nothing. Throws a Tcl error if an error occurs.
+    </p></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2570056"></a><h2>Notes</h2><p>
+There is no guarantee that the command will actually be canceled. For
+example, the command may have been completed before the database server
+can receive and handle the cancel request. If a request is canceled, and
+you were in the middle of a transaction, the entire transaction is rolled
+back.
+    </p><p>
+You still need to call <a href="pg-getresult.html" title="pg_getresult"><span class="refentrytitle">pg_getresult</span></a> repeatedly until it
+doesn't return anything, and deal with all the returned result handles,
+usually by freeing them with <code class="literal">pg_result -clear</code>.
+    </p><p>
+This command uses or emulates the PostgreSQL <span class="application">libpq</span>
+function <code class="function">PQrequestCancel</code>.
+    </p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="pg-getresult.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="pgtcl-ref-async.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="pg-blocking.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">pg_getresult </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> pg_blocking</td></tr></table></div></body></html>

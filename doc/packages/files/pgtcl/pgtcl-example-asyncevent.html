@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" /><title>5.12. Example - Asynchronous Query with Event-Driven Results</title><link rel="stylesheet" href="stylesheet.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.70.1" /><link rel="start" href="index.html" title="Pgtcl Reference Manual" /><link rel="up" href="pgtcl-examples.html" title="Chapter 5. Example Programs" /><link rel="prev" href="pgtcl-example-async.html" title="5.11. Example - Asynchronous Queries" /><link rel="next" href="pgtcl-example-copy.html" title="5.13. Example - COPY FROM and COPY TO" /><link rel="copyright" href="ln-legalnotice.html" title="Legal Notice" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">5.12. Example - Asynchronous Query with Event-Driven Results</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="pgtcl-example-async.html">Prev</a> </td><th width="60%" align="center">Chapter 5. Example Programs</th><td width="20%" align="right"> <a accesskey="n" href="pgtcl-example-copy.html">Next</a></td></tr></table><hr /></div><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="pgtcl-example-asyncevent"></a>5.12. Example - Asynchronous Query with Event-Driven Results</h2></div></div></div><p>
+Like the previous example, this example uses the asynchronous query commands
+described in <a href="pgtcl-ref-async.html" title="4.4. Asynchronous Query Processing Commands">Section 4.4, &#8220;Asynchronous Query Processing Commands&#8221;</a>.
+Unlike that example in <a href="pgtcl-example-async.html" title="5.11. Example - Asynchronous Queries">Section 5.11, &#8220;Example - Asynchronous Queries&#8221;</a>, this example
+uses <a href="pg-result-callback.html" title="pg_result_callback"><span class="refentrytitle">pg_result_callback</span></a> to establish an event handler
+to notify the Tcl interpreter when a result is ready.
+This feature was added to <span class="application">pgtcl-ng </span> at version
+1.6.0. In this example, Tcl waits for either an alarm-clock timeout or
+a result from the query.
+The same method can be used to wait for file or socket events,
+or to respond to user actions in a Tk interface, while also waiting for
+query results.
+Note: this is not a complete script.
+</p><div class="example"><a id="pgtcl-example-asyncevent-code"></a><p class="title"><b>Example 5.18. Asynchronous Query with Event-Driven Results</b></p><div class="example-contents"><pre class="programlisting">
+# Timeout handler. It sets a global flag to indicate TIMEOUT.
+proc event_timeout {} {
+  global event_flag
+  if {$event_flag eq "WAITING"} {
+    set event_flag TIMEOUT
+  }
+}
+
+# Query ready handler. It sets a global flag to indicate READY.
+proc event_result {} {
+  global event_flag
+  if {$event_flag eq "WAITING"} {
+    set event_flag READY
+  }
+}
+
+
+# Issue a query with timeout.
+#   conn is the database connection handle.
+#   sql is the SQL text to execute.
+#   timeout is the number of seconds to wait for the query.
+# If the query completes, this just displays the row count. In real life,
+# you would do something more with the results.
+proc query_timeout {conn sql {timeout 20}} {
+  global event_flag
+
+  # Calculate timeout in milliseconds:
+  set timeout_msec [expr {1000 * $timeout}]
+
+  # Initialize the global flag:
+  set event_flag WAITING
+
+  # Establish the result callback:
+  pg_result_callback $conn event_result
+ 
+  # Set the alarm clock:
+  set after_id [after $timeout_msec event_timeout]
+
+  # Send the query off, but do not wait:
+  pg_sendquery $conn $sql
+
+  # Wait for something - timeout or results - to change the global flag:
+  vwait event_flag
+
+  # Did the query complete?
+  if {$event_flag eq "READY"} {
+    # Cancel the alarm clock:
+    after cancel $after_id
+    puts "Query complete. Fetching result:"
+    set res [pg_getresult $conn]
+    puts "The query returned [pg_result $res -numTuples] row(s)."
+    pg_result $res -clear
+  } elseif {$event_flag eq "TIMEOUT"} {
+    puts "Query did not complete! It timed out in about $timeout seconds."
+    puts "Canceling the request:"
+    # Note pg_cancelrequest also cancels the result callback.
+    pg_cancelrequest $conn
+    # Now we have to block until the backend is ready.
+    pg_result [pg_getresult $conn] -clear
+    puts "Request canceled."
+  }
+}
+</pre></div></div><br class="example-break" /><p>
+Here is an example of using the above function. The pg_sleep PostgreSQL
+backend function (added at PostgreSQL-8.2.0) is used to simulate a slow
+query. Because the query time is longer than the specified timeout, this
+will time out. If the numbers are switched, the query will complete.
+</p><pre class="programlisting">
+  query_timeout $conn "select pg_sleep(6)" 4
+</pre></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="pgtcl-example-async.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="pgtcl-examples.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="pgtcl-example-copy.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">5.11. Example - Asynchronous Queries </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 5.13. Example - COPY FROM and COPY TO</td></tr></table></div></body></html>

@@ -1,0 +1,187 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Configurations Management</title><meta name="generator" content="DocBook XSL Stylesheets V1.68.1"><link rel="start" href="index.html" title="XOTclIDE User Guide"><link rel="up" href="ch04.html" title="Chapter 4. Extended Features"><link rel="prev" href="ch04s02.html" title="Syntax Checking"><link rel="next" href="ch04s04.html" title="Debugging"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Configurations Management</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch04s02.html">Prev</a> </td><th width="60%" align="center">Chapter 4. Extended Features</th><td width="20%" align="right"> <a accesskey="n" href="ch04s04.html">Next</a></td></tr></table><hr></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="configurationManagement"></a>Configurations Management</h2></div></div></div><p>
+Configuration Management relates to two other areas in the software development process. They are Deployment and Release Management.
+In XOTclIDE Configuration Management is based on
+
+“<span class="quote">Configurations Maps</span>” that are used to specify a particular application (that is commonly deployed as one unit) as a collection of components.
+Versioned configuration maps allow performing release management.
+With XOTclIDE it is very easy to detect all changes (and their causers) between two application versions.
+You need no additional bureaucracy in your project.
+</p><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2983838"></a>Main Features</h3></div></div></div><p>
+</p><div class="itemizedlist"><ul type="disc"><li><p>organize the groups of components which should be loaded and used together</p></li><li><p>build application (distribution) as a set of XOTclIDE components and a start script</p></li><li><p>build the base file for 
+
+<span><strong class="command">CompLoader.tcl</strong></span> to load your application directly from a database (thin-clients).</p></li><li><p>specify the exact version numbers and order of components which should be loaded.</p></li></ul></div><p>
+Two tools for configuration management are available in XOTcl.
+The 
+
+<span class="emphasis"><em>Configuration Map Browser</em></span> can be used without the version control system and the extended 
+
+<span class="emphasis"><em>Configuration Browser</em></span> (Menu 
+
+
+<span class="guimenu">System</span>-&gt;<span class="guisubmenu">Version Control</span>-&gt;<span class="guimenuitem">Configuration Browser</span>) can only be used with the version control system.
+The Configuration Browser saves all information in the version control system.
+You can import and export data between the two systems.
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2983920"></a>Configuration Map - Without Version Control System</h3></div></div></div><p>
+</p><div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Warning</h3><p>
+It is strongly recommended to use the Configuration Browser if you work with the version control system.
+</p></div><p>
+</p><p>
+A <span class="emphasis"><em>Configuration Map</em></span> is a file (Tcl-script) that exactly specifies the components to be loaded and the start scripts.
+One script (preStartScript) will be invoked before loading components and one (startScript) will start your application after components are loaded.
+(see file Sample.cfmap)
+</p><p>
+The component list has the structure
+
+
+</p><pre class="screen">
+{IDECore 10}
+{IDEBase 12}
+{IDEGUI newest}
+{IDEView package}
+IDEViewDB
+</pre><p>
+The loader will search the components 
+
+<span class="emphasis"><em>IDECore</em></span> versionId=10 and 
+
+<span class="emphasis"><em>IDEBase</em></span> versionId=12 in the database.
+The newest version of the component 
+
+<span class="emphasis"><em>IDEGUI</em></span> will be loaded.
+The Component 
+
+<span class="emphasis"><em>IDEView</em></span> will be loaded with
+
+<span class="emphasis"><em>package require IDEView</em></span>.
+For component 
+
+<span class="emphasis"><em>IDEViewDB</em></span> the loader will search first in the database and if not found it will try to load the package with 
+
+<span class="emphasis"><em>package require IDEViewDB</em></span>.
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2983987"></a>Using Configurations Maps</h3></div></div></div><p>
+Launch the 
+
+<span><strong class="command">Configuration Browser</strong></span> by selecting menu 
+
+
+<span class="guimenu">System</span>-&gt;<span class="guimenuitem">Configuration Browser</span>.
+Load the configuration map (Sample.cfmap) by selecting menu 
+
+
+<span class="guimenu">Edit</span>-&gt;<span class="guimenuitem">Load Configuration Map</span>.
+Press the toggle button.
+You can see the aspects of configuration maps
+
+
+</p><div class="itemizedlist"><ul type="disc"><li><p>preStartScript - tcl code that will be started before loading components</p></li><li><p>startScript - tcl code to start your application.
+Evaluated after loading all component.</p></li></ul></div><p>
+You can use list boxes and buttons to specify the configuration components
+</p><div class="figure"><a name="confMapBrowser"></a><p class="title"><b>Figure 4.6. Configuration Map Browser</b></p><div class="mediaobject"><img src="confbrowser.png" alt="Configuration Map Browser"></div></div><p>
+
+You can edit them.
+Press Control-S to apply changes.
+Select
+
+
+<span class="guimenu">Edit</span>-&gt;<span class="guimenuitem">Load Components</span>
+to load components into the system (interpreter).
+Select
+
+
+<span class="guimenu">Edit</span>-&gt;<span class="guimenuitem">Run Start Scripts</span> to evaluate 
+
+<span class="emphasis"><em>preStartScript startScript</em></span>.
+You can make a new configuration map by using 
+
+
+<span class="guimenu">Edit</span>-&gt;<span class="guimenuitem">Init From System</span></p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2984140"></a>Deploying Application</h3></div></div></div><p>
+Distribution is the set of files that you can bind for example as a tar or zip file and distribute to other parts.
+A Configuration map is a base to specify the distribution.
+First load the component with 
+
+
+<span class="guimenu">Edit</span>-&gt;<span class="guimenuitem">Load Components</span>
+than select menu
+
+
+<span class="guimenu">Edit</span>-&gt;<span class="guimenuitem">Make Distribution</span>.
+Select the directory (or create a new one).
+The system generates the set of files:
+
+
+</p><pre class="screen">
+Sample  Sample.cfmap  SampleComponent.xotcl  pkgIndex.tcl
+</pre><p>
+<span class="emphasis"><em>Sample</em></span> is the executable file to start the application.
+Take a look at it.
+
+
+</p><pre class="programlisting">
+#!/usr/local/bin/xowish
+# File generated by xotclIDE
+# edit if you want
+
+set sname [info script]
+if {$sname==""} {
+     # Run interactive for develop purposes
+     set progdir [pwd]
+} else {
+     file lstat $sname stats
+     # follow sym links
+     if {$stats(type)=="link"} {
+          set sname [file readlink $sname]
+          if {[file pathtype $sname]=="relative"} {
+                set sname [file join [file dirname [info script]] $sname]
+          }
+     }
+     set progdir [file dirname $sname]
+}
+
+lappend auto_path [file dirname $progdir]
+package require PlatformLogDumper
+generateTclPlatformProtocol out.log
+</pre><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2984213"></a>Configuration Browser - with Version Control System</h3></div></div></div><p>
+</p><div class="figure"><a name="ConfigurationBrowser"></a><p class="title"><b>Figure 4.7. Configuration Browser</b></p><div class="mediaobject"><img src="configmap.png" alt="Configuration Browser"></div></div><p>
+This tool saves the configuration-maps in the version control systems so
+configuration-maps can also have editions and versions.
+Therefore you can have many editions of one configuration-map.
+You can browse changes among different configuration-map editions.
+</p><div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Warning</h3><p>
+Unlike other browsers, all Configuration Browser functions are available only in pop-down menus.
+</p></div><p>
+For example you have built a program named 
+
+<span><strong class="command">sqleditor</strong></span>.
+In Version 0.1 your program is built from components as below
+</p><p>
+configuration-map - sqleditor (version 0.1)
+
+
+</p><div class="itemizedlist"><ul type="disc"><li><p>guisystem - version 0.1</p></li><li><p>sqlparser - version 0.2</p></li><li><p>persistence - version 0.3</p></li></ul></div><p>
+And the additional configuration-map (sub configuration map)
+sqlinterfaces - version 1.2
+</p><p>
+In version 0.2 sqleditor has the following configuration
+
+
+</p><div class="itemizedlist"><ul type="disc"><li><p>guisystem - version 0.2</p></li><li><p>sqlparser - version 0.2</p></li><li><p>persistence - version 0.4</p></li></ul></div><p>
+And the additional configuration-map (sub configuration map)
+sqlinterfaces - version 1.2
+</p><p>
+The main idea of Configuration Browser and Configuration-Maps is to have a medium
+for component based programming.
+This means you have many components that are parts of many products.
+All these components are in one version system.
+</p><p>
+It is not yet possible to use the
+
+<span><strong class="command">Component Browser</strong></span> to generate a distribution.
+You must export a versioned configuration map to configuration map file with pop-up menu
+
+
+<span class="guimenu">Conf. Version</span>-&gt;<span class="guimenuitem">export to map</span>.
+Then you can use this file with 
+
+<span><strong class="command">Configuration Map Browser</strong></span>
+</p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch04s02.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="ch04.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ch04s04.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Syntax Checking </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Debugging</td></tr></table></div></body></html>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" /><title>Chapter 2. Building and Installing pgtcl-ng</title><link rel="stylesheet" href="stylesheet.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.70.1" /><link rel="start" href="index.html" title="Pgtcl Reference Manual" /><link rel="up" href="index.html" title="Pgtcl Reference Manual" /><link rel="prev" href="pgtcl-overview.html" title="Chapter 1. Overview" /><link rel="next" href="pgtcl-make-win.html" title="2.2. Building and Installing on Windows Systems (Borland Compiler)" /><link rel="copyright" href="ln-legalnotice.html" title="Legal Notice" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter 2. Building and Installing <span class="application">pgtcl-ng</span></th></tr><tr><td width="20%" align="left"><a accesskey="p" href="pgtcl-overview.html">Prev</a> </td><th width="60%" align="center"> </th><td width="20%" align="right"> <a accesskey="n" href="pgtcl-make-win.html">Next</a></td></tr></table><hr /></div><div class="chapter" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title"><a id="pgtcl-make"></a>Chapter 2. Building and Installing <span class="application">pgtcl-ng</span></h2></div></div></div><div class="abstract"><p class="title"><b>Abstract</b></p><span class="ifnotalone">
+  <p>
+This chapter describes how to build and install
+<span class="application">pgtcl-ng</span>, making it available for use
+in your applications.
+You should check the release for <code class="filename">README</code> or
+<code class="filename">INSTALL</code> files,
+which may contain more up-to-date information.
+  </p>
+  <p>
+This chapter only applies to the <span class="application">pgtcl-ng</span>
+implementation of <span class="application">pgtcl</span>. For other
+implementations, check the included documentation.
+  </p>
+</span></div><div class="sect1" lang="en" xml:lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a id="pgtcl-make-nix"></a>2.1. Building and Installing on Unix-like Systems</h2></div></div></div><div class="abstract"><p class="title"><b>Abstract</b></p><p>
+This section describes how to build and install
+<span class="application">pgtcl-ng</span> on Unix-like systems, including Linux.
+  </p></div><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="pgtcl-make-nix-prereq"></a>2.1.1. Prerequisites for Unix-like Systems</h3></div></div></div><p>
+To build <span class="application">pgtcl-ng</span> on Unix-like Systems,
+you need:
+  </p><div class="itemizedlist"><ul type="disc"><li><p>
+<a href="http://www.tcl.tk" target="_top">Tcl/Tk</a>
+version 8.3.1 or higher, with 8.4.4 or higher strongly recommended.
+    </p></li><li><p>
+<a href="http://www.postgresql.org" target="_top">PostgreSQL</a>
+version 7.4 or higher, with 8.1.4 or higher recommended.
+    </p></li><li><p>
+The usual building tools such as C compiler, make, and a shell.
+    </p></li></ul></div></div><div class="sect2" lang="en" xml:lang="en"><div class="titlepage"><div><div><h3 class="title"><a id="pgtcl-make-nix-make"></a>2.1.2. Building and Installing - Unix-like Systems</h3></div></div></div><p>
+<span class="application">Pgtcl-ng</span> is Tcl Extension Architecture (TEA)
+compliant, shipping with a standard <code class="filename">configure</code>
+script. You do not need to have a PostgreSQL
+source distribution available to build <span class="application">pgtcl-ng</span>,
+but you need a PostgreSQL installation
+with libraries and header files.
+  </p><p>
+After unpacking the <span class="application">pgtcl-ng</span> distribution,
+change directory into the top level of the distribution.
+  </p><p>
+To configure <span class="application">pgtcl-ng</span>, the paths to the
+to the PostgreSQL include files and library files must be known.
+For releases of <span class="application">pgtcl-ng</span> before 1.6.0, you
+must specify these paths on the <span class="application">configure</span>
+command line.
+If you have the <span class="application">pg_config</span> program supplied with
+PostgreSQL on your <code class="literal">PATH</code>,
+you can use it to specify the directories as follows:
+  </p><pre class="screen">
+<code class="prompt">$</code> <strong class="userinput"><code> ./configure --prefix=/usr/local \
+     --libdir=/usr/lib/tcl8.4 \
+     --with-postgres-include=$(pg_config --includedir) \
+     --with-postgres-lib=$(pg_config --libdir)</code></strong>
+</pre><p>
+If you don't have <span class="application">pg_config</span> available, you can
+specify the directories on the command line, for example:
+  </p><pre class="screen">
+<code class="prompt">$</code> <strong class="userinput"><code> ./configure --prefix=/usr/local \
+     --libdir=/usr/lib/tcl8.4 \
+     --with-postgres-include=/opt/postgres/include \
+     --with-postgres-lib=/opt/postgres/lib</code></strong>
+</pre><p>
+assuming you have installed PostgreSQL
+in the directory <code class="filename">/opt/postgres</code>.
+  </p><p>
+In the above configure commands, we have specified both
+<code class="literal">--prefix</code> and <code class="literal">--libdir</code>.
+If you are going to manually install the product (which is easy, since
+there is just one file produced), you can use anything you want or omit these.
+If you plan to use the <code class="literal">install</code> target in the
+Makefile, you need to point <code class="literal">--libdir</code> to a
+location where Tcl will look for package directories. On a typical
+system, this may be <code class="filename">/usr/lib/tcl8.4/</code> as shown above.
+The <code class="literal">--prefix</code> is only used for the header file
+installation (which is normally not needed anyway).
+  </p><p>
+Starting with <span class="application">pgtcl-ng</span> release 1.6.0,
+you can omit the <code class="literal">--with-postgres-lib</code> and/or
+<code class="literal">--with-postgres-include</code>
+options to <span class="application">configure</span>,
+and the <span class="application">pg_config</span> command will be used
+to locate those directories.
+For this to work, <span class="application">pg_config</span> needs to be
+on your PATH.
+<span class="application">pg_config</span> is part of the PostgreSQL installation.
+You may use configure like this:
+  </p><pre class="screen">
+<code class="prompt">$</code> <strong class="userinput"><code> ./configure --prefix=/usr/local \
+     --libdir=/usr/lib/tcl8.4</code></strong>
+</pre><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>
+<span class="application">pg_config</span> expands symbolic links in pathnames.
+This is not significant for the include directory, but it can be for the
+library directory, because it becomes part of the built library
+(as <code class="literal">rpath</code>), used to locate the PostgreSQL library
+<span class="application">libpq</span> at runtime.
+If you prefer to reference your PostgreSQL library path through a symbolic
+link (for example, so you can use the libraries and executables
+on a system with the same symbolic link but a different physical path),
+then do not allow <span class="application">configure</span> to use
+<span class="application">pg_config</span>.
+Specify <code class="literal">--with-postgres-lib</code> when configuring instead.
+    </p></div><p>
+To build <span class="application">pgtcl-ng</span>, just type:
+  </p><pre class="screen">
+<code class="prompt">$</code> <strong class="userinput"><code> make </code></strong>
+</pre><p>
+If all goes well, you will end up with a shared library file
+named something like <code class="filename">libpgtcl1.6.0.so</code>.
+  </p><p>
+You can install <span class="application">pgtcl-ng</span> with:
+  </p><pre class="screen">
+<code class="prompt">$</code> <strong class="userinput"><code> make install</code></strong>
+</pre><p>
+to install everything in the paths set during configure, as
+indicated above. If the paths are chosen right, the result
+will be enabled for package loading<span class="ifnotalone">, as described in
+<a href="pgtcl-loading.html#pgtcl-load-package" title="3.1. Using the Tcl Package Command">Section 3.1, &#8220;Using the Tcl Package Command&#8221;</a></span>.
+  </p><p>
+You may choose instead to manually install <span class="application">pgtcl-ng</span>.
+
+<span class="ifnotalone">
+Refer to <a href="pgtcl-loading.html" title="Chapter 3. Loading pgtcl into an Application">Chapter 3, <i>Loading <span class="application">pgtcl</span> into an Application</i></a> for methods of using
+<span class="application">pgtcl-ng</span> with your application.</span>
+
+If you will be loading <code class="filename">libpgtcl</code> directly
+in your application, you need only copy that file into a convenient
+location for loading. Note that <code class="filename">libpgtcl</code> will
+need to find the PostgreSQL <code class="filename">libpq</code> loadable library.
+  </p><p>
+If you want to be able to load <span class="application">libpgtcl</span>
+into applications using
+  </p><pre class="programlisting">
+package require Pgtcl
+</pre><p>
+you need to install <code class="filename">libpgtcl</code> into a subdirectory
+of Tcl's <code class="literal">tcl_pkgPath</code> or <code class="literal">auto_path</code>,
+and include the file <code class="filename">pkgIndex.tcl</code> which tells Tcl
+how to load the package. For example:
+  </p><pre class="screen">
+<code class="prompt">$</code> <strong class="userinput"><code>mkdir /usr/lib/tcl8.4/pgtcl1.6</code></strong>
+<code class="prompt">$</code> <strong class="userinput"><code>cp libpgtcl1.6.0.so pkgIndex.tcl /usr/lib/tcl8.4/pgtcl1.6</code></strong>
+</pre><p>
+This is what the <code class="literal">make install</code> target does.
+Note: The name of the directory under the Tcl library directory is not
+important, as the extension will be found regardless of the directory name.
+You may choose to use the three-part version number in the name, or just
+the major and minor version numbers.
+  </p></div></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="pgtcl-overview.html">Prev</a> </td><td width="20%" align="center"> </td><td width="40%" align="right"> <a accesskey="n" href="pgtcl-make-win.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter 1. Overview </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> 2.2. Building and Installing on Windows Systems (Borland Compiler)</td></tr></table></div></body></html>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" /><title>pg_connect</title><link rel="stylesheet" href="stylesheet.css" type="text/css" /><meta name="generator" content="DocBook XSL Stylesheets V1.70.1" /><link rel="start" href="index.html" title="Pgtcl Reference Manual" /><link rel="up" href="pgtcl-ref.html#pgtcl-ref-connection" title="4.1. Database Connection Control Commands" /><link rel="prev" href="pgtcl-ref.html#pgtcl-ref-connection" title="4.1. Database Connection Control Commands" /><link rel="next" href="pg-disconnect.html" title="pg_disconnect" /><link rel="copyright" href="ln-legalnotice.html" title="Legal Notice" /></head><body><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">pg_connect</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="pgtcl-ref.html#pgtcl-ref-connection">Prev</a> </td><th width="60%" align="center">4.1. Database Connection Control Commands</th><td width="20%" align="right"> <a accesskey="n" href="pg-disconnect.html">Next</a></td></tr></table><hr /></div><div class="refentry" lang="en" xml:lang="en"><a id="pg-connect"></a><div class="titlepage"></div><div class="refnamediv"><h2><span class="refentrytitle">pg_connect</span></h2><p>pg_connect &#8212; Open a connection to the server</p></div><div class="refsynopsisdiv"><h2>Synopsis</h2><pre class="synopsis">
+pg_connect -conninfo <em class="parameter"><code>connectOptions</code></em>
+pg_connect <em class="parameter"><code>dbName</code></em> ?<span class="optional">-host <em class="parameter"><code>hostName</code></em></span>? ?<span class="optional">-port <em class="parameter"><code>portNumber</code></em></span>? ?<span class="optional">-tty <em class="parameter"><code>tty</code></em></span>? ?<span class="optional">-options <em class="parameter"><code>serverOptions</code></em></span>?
+</pre></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2563816"></a><h2>Description</h2><p>
+      <code class="function">pg_connect</code> opens a connection to the
+      PostgreSQL server.
+    </p><p>
+      Two syntax styles are available.  In the older one, each possible option
+      has a separate option switch in the <span><strong class="command">pg_connect</strong></span>
+      command. This syntax is deprecated and should not be used.
+      In the newer style, a single option string is supplied
+      that can contain multiple option values.
+      <a href="pg-conndefaults.html" title="pg_conndefaults"><span class="refentrytitle">pg_conndefaults</span></a> can be used to retrieve
+      information about the available options in the newer syntax style.
+    </p><p>
+      Connections opened with <code class="function">pg_connect</code>
+      should be closed with <a href="pg-disconnect.html" title="pg_disconnect"><span class="refentrytitle">pg_disconnect</span></a>
+      once they are no longer needed.
+    </p></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2563866"></a><h2>Arguments</h2><div class="variablelist"><p class="title"><b>New style</b></p><dl><dt><span class="term"><code class="option">-conninfo <em class="replaceable"><code>connectOptions</code></em></code></span></dt><dd><p>
+            A string of connection options, each written in the form
+            <code class="literal">keyword = value</code>.  A list of valid options can be
+            found in the description of the <span class="application">libpq</span>
+            function <code class="function">PQconnectdb</code>. Some of the more
+            common keywords are: <code class="literal">host</code>,
+            <code class="literal">port</code>, <code class="literal">dbname</code>,
+            <code class="literal">user</code>, and <code class="literal">password</code>. The
+            keyword value must be placed in single quotes if it is empty
+            or contains spaces. Within the single quotes, a single quote
+            or backslash must be escaped by preceding it with a backslash.
+          </p></dd></dl></div><div class="variablelist"><p class="title"><b>Old style</b></p><dl><dt><span class="term"><em class="replaceable"><code>dbName</code></em></span></dt><dd><p>
+            The name of the database to connect to.
+          </p></dd><dt><span class="term"><code class="option">-host <em class="replaceable"><code>hostName</code></em></code></span></dt><dd><p>
+            The host name of the database server to connect to.
+          </p></dd><dt><span class="term"><code class="option">-port <em class="replaceable"><code>portNumber</code></em></code></span></dt><dd><p>
+            The TCP port number of the database server to connect to.
+          </p></dd><dt><span class="term"><code class="option">-tty <em class="replaceable"><code>tty</code></em></code></span></dt><dd><p>
+            A file or <acronym class="acronym">TTY</acronym> for optional debug output from
+            the server.
+          </p></dd><dt><span class="term"><code class="option">-options <em class="replaceable"><code>serverOptions</code></em></code></span></dt><dd><p>
+            Additional configuration options to pass to the server.
+          </p></dd></dl></div></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2564038"></a><h2>Return Value</h2><p>
+       If successful, a handle for a database connection is returned.
+       Handles start with the prefix <code class="literal">pgsql</code>.
+    </p><p>
+       A Tcl error will be thrown if a connection could not be made. The Tcl
+       error message indicates the reason.
+    </p></div><div class="refsect1" lang="en" xml:lang="en"><a id="id2564061"></a><h2>Notes</h2><p>
+      This command uses or emulates the PostgreSQL
+      <span class="application">libpq</span>
+      function <code class="function">PQconnectdb</code> in the newer style, and
+      the function <code class="function">PQsetdb</code> for the older style.
+    </p></div></div><div class="navfooter"><hr /><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="pgtcl-ref.html#pgtcl-ref-connection">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="pgtcl-ref.html#pgtcl-ref-connection">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="pg-disconnect.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">4.1. Database Connection Control Commands </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> pg_disconnect</td></tr></table></div></body></html>

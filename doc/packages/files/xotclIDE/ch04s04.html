@@ -1,0 +1,44 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Debugging</title><meta name="generator" content="DocBook XSL Stylesheets V1.68.1"><link rel="start" href="index.html" title="XOTclIDE User Guide"><link rel="up" href="ch04.html" title="Chapter 4. Extended Features"><link rel="prev" href="ch04s03.html" title="Configurations Management"><link rel="next" href="ch04s05.html" title="Importing Tcl Projects into XOTclIDE Components"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Debugging</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="ch04s03.html">Prev</a> </td><th width="60%" align="center">Chapter 4. Extended Features</th><td width="20%" align="right"> <a accesskey="n" href="ch04s05.html">Next</a></td></tr></table><hr></div><div class="sect1" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="debugging"></a>Debugging</h2></div></div></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2984384"></a>Debugger Browser</h3></div></div></div><p>
+This Browser lets you stop the program flow at a point and view calling stack methods and local variables.
+To set a break point call the halt method
+
+</p><pre class="programlisting">
+[self] halt
+</pre><p>
+in Tcl procedures you need to use
+</p><pre class="programlisting">
+Object halt
+</pre><p>
+
+</p><div class="figure"><a name="debugger"></a><p class="title"><b>Figure 4.8. Debugger</b></p><div class="mediaobject"><img src="debugger.png" alt="Debugger"></div></div><p>
+
+You can resume the program flow with button <span class="guibutton">Resume</span> or terminate the flow by exiting the browser (close window).
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2984447"></a>Stack Error Browser</h3></div></div></div><p>
+This browser can parse the error stack info “<span class="quote">errorInfo</span>”.
+XOTclIDE modifies the <code class="methodname">bgerror</code> method and adds a new button to the standard error dialog (XOTclIDE browser).
+Tcl does not let you inspect the calling stack after errors 
+so this is all the information available after an error.
+You can view (Button errorInfo) the original errorInfo text.
+The browser tries to highlight the called methods in the stack.
+In the extended debugger an error causes the debugger to be invoked directly at the site of the error.
+
+</p><div class="figure"><a name="errorStack"></a><p class="title"><b>Figure 4.9. Error Stack Browser</b></p><div class="mediaobject"><img src="errorstack.png" alt="Error Stack Browser"></div></div><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="id2984503"></a>Tracker Browser</h3></div></div></div><p>
+This is a GUI for a browser like the tracker from the XOTcl package xotcl::tracker.
+You can track calls to every object of a chosen class.
+To Track a class select menu "Track Class" from the Class Menu in the Component Browser.
+You can customize the tracker to show
+</p><div class="itemizedlist"><ul type="disc"><li><p>only method entry or exit points</p></li><li><p>ignore internal calls from the same object</p></li><li><p>do not show arguments or return values</p></li><li><p>do not show calling information</p></li></ul></div><p>
+</p><div class="figure"><a name="tacker"></a><p class="title"><b>Figure 4.10. Method Call Tracker</b></p><div class="mediaobject"><img src="tracker.png" alt="Method Call Tracker"></div></div><p>
+</p></div><div class="sect2" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="vartracker"></a>Variable access tracking and watching</h3></div></div></div><p>XOTclIDE can be used to track read or write access on global variables or object variables.
+To add some track use variable menu in global variables browser or object inspector.
+The some selected access occurs the debugger will be invoked in access place.
+You can inspect in debugger the access context and resume the operation per button resume.
+The variables can be also watched in entry Tk widget link per -textvariable with chosen variable.
+</p><div class="figure"><a name="vartrackerfig"></a><p class="title"><b>Figure 4.11. Variable Tracker and Variable Watch</b></p><div class="mediaobject"><img src="variabletracker.png" alt="Variable Tracker and Variable Watch"></div></div><p>
+In this screen-shoot are 4 tracked variables.
+By variable <span class="emphasis"><em>tk_library</em></span> the debugger are invoked on every read access. There are also one XOTcl variable (object variable) objectVar from object c written in XOTcl style as ::c::objectVar. Local procedures variables can not be tracked or watched.</p><p>To add new tracks for chosen variable use Object Inspector or Global Vars Browser. For example
+<span class="guimenu">Variables</span>-&gt;<span class="guimenuitem">Debug on Write Access</span>
+to add write access track.
+You can have multiple tracks (read, write, watch) on one variable.
+</p><div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Warning</h3><p>Watches on variables can prevent proper unset of variables. Therefore watches can influence program flow.</p></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="ch04s03.html">Prev</a> </td><td width="20%" align="center"><a accesskey="u" href="ch04.html">Up</a></td><td width="40%" align="right"> <a accesskey="n" href="ch04s05.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Configurations Management </td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top"> Importing Tcl Projects into XOTclIDE Components</td></tr></table></div></body></html>

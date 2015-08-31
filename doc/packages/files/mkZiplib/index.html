@@ -1,0 +1,352 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+  <title>mkZiplib Manual</title>
+  <meta http-equiv="Content-Type" content="text/html"/>
+  <meta name="DESCRIPTION" content="Tcl/Tk mkZiplib"/>
+  <meta name="AUTHOR"      content="Michael Kraus"/>
+  <meta name="KEYWORDS"    content="Tcl, Tk, Tcl/Tk, Scriptics, Scripting, Programming, Extension, Package, Zip, mkZiplib"/>
+  <style type="text/css"><!--
+    body { font-family: Lucida Sans Unicode, Arial, Helvetica }
+    p    { font-family: Arial, Helvetica; font-size: .8em; margin: 1em }
+    h1   { font-size: 1.2em; font-weight: normal; color: #000000; background: #FFFF40; padding: 0.4em }
+    h2   { font-size: 1.0em; font-weight: normal; color: #000080; background: #DDDDDD; padding: 0.1em }
+    h3   { font-size: 0.8em; font-weight: normal; color: #000080 }
+    h6   { font-size: 0.7em; font-weight: normal; margin: 1em }
+    em   { font-size: 1em; font-weight: normal; font-style: normal; color: #000080 }
+    pre  { color: blue; margin: 1em 1em 1em 1em }
+    ul   { font-family: Arial, Helvetica; font-size: .8em; margin: 1em 1em 1em 3em }
+    a    { text-decoration: none }
+    a:hover { text-decoration: underline; color: red }
+    img  { float: right; clear: right; margin: .5em }
+  --></style>
+</head>
+
+<body>
+  <h1><img src="images/TclLogo.gif" alt=""/>&nbsp;mkZiplib 1.0 Manual</h1>
+  <h6>Permission to use, copy, modify, and distribute this software and its documentation
+  for any purpose and without fee is hereby granted. The author makes no representations
+  about the suitability of this software for any purpose.  It is provided "as is" without
+  express or implied warranty.  By use of this software the user agrees to indemnify and
+  hold harmless the author from any claims or liability for loss arising out of such use.<br/>&nbsp;</h6>
+
+  <h2>&nbsp;CONTENTS</h2>
+  <p>
+    mkZiplib 1.0 - A package for data compression, based on Zlib 1.1.3 and Minizip 0.15.
+  </p>
+  <p>
+    <a href="#introduction">Introduction</a><br/>
+    <a href="#commands">Commands</a><br/>
+    <a href="#notes">Notes</a><br/>
+    <a href="#examples">Examples</a><br/>
+    <a href="#installation">Installation</a><br/>
+    <a href="#changes">Changes</a><br/>
+    <a href="#author">Author</a><br/>
+  </p>
+
+  <h2><a name="introduction">&nbsp;INTRODUCTION</a></h2>
+  <p>
+    mkZiplib is essentially a wrapper around the compression libraries Zlib 1.1.3 and Minizip 0.15
+    (see the <a href="#notes">notes</a> section below). It provides four new commands that allow
+    to compress and decompress data, and to work with .gz (as produced by
+    <a href="http://www.gzip.org">gzip</a>) and .zip files.
+    mkZiplib makes use of some of Tcl's newer API functions and therefore requires Tcl 8.2 or higher.
+  </p>
+
+  <h2><a name="commands">&nbsp;COMMANDS</a></h2>
+  <h3>deflate ?-level 0..9? Data</h3>
+  <p>
+    The <em>deflate</em> command takes Data as a binary string, compresses it,
+    and returns the compressed Data as a binary string.
+    The <em>-level</em> option influences the compression level and the execution speed.
+    It accepts values between 0 (no compression, fast) and 9 (maximum compression, slower).
+    For short Data strings, the output from <em>deflate</em> can be longer than the original
+    Data, which is due to internal overhead from headers and the way the compression algorithm
+    works.
+  </p>
+
+  <h3>inflate ?-size numBytes? Data</h3>
+  <p>
+    The <em>inflate</em> command is the counterpart of <em>deflate</em> and decompresses Data.
+    If the size of the <i>uncompressed</i> data is known, then it can be specified with the
+    <em>-size</em> option. If not, buffer space is allocated as needed during decompression.
+    Using the <em>-size</em> option avoids internal reallocation of memory and can hence
+    increase the command's performance.
+  </p>
+
+  <h3>gz Option ?args ...?</h3>
+  <p>
+    The <em>gz</em> command allows to read and write .gz files. This format is common on Unix
+    and supported by the command gzip (and gunzip). A gz file contains plain compressed data, but no
+    "file directory". It therefore usually represents the compressed version of exactly one file
+    (unlike the zip format, which can contain multiple files).
+  </p>
+  <p>
+    <em>gz open ?-level 0..9? GzFileName ?AccessMode?</em><br/>
+    For AccessMode <em>r</em> (the default), the file specified by GzFileName is opened for subsequent reading
+    operations by means of <em>gz read</em> or <em>gz gets</em>.
+    For AccessMode <em>w</em> the file is created, or trunctated if it already exists, for subsequent
+    writing operations with <em>gz write</em> or <em>gz flush</em>.
+    With AccessMode <em>a</em>, the file is opened for writing, and new data will be appended to it.
+    The <em>-level</em> option has the same function as described with the <em>deflate</em> command.
+    If successful, the command returns a file handle required for subsequent calls to the <em>gz</em> command.
+  </p>
+  <p>
+    <em>gz close GzHandle</em><br/>
+    Closes the file identified by GzHandle. If the file was openened for writing, all buffered data
+    is automatically flushed prior to closing the file.
+  </p>
+  <p>
+    <em>gz write GzHandle Data</em><br/>
+    Compresses and writes Data to the file specified by GzHandle. Data can of course be a binary string.
+    Note that the command does not append a newline character to the Data.
+    The command returns the number of uncompressed bytes written to the file.
+  </p>
+  <p>
+    <em>gz flush GzHandle</em><br/>
+    Flushes any buffered output to the file specified by GzHandle. Similar to the standard Tcl <em>flush</em>
+    command.
+  </p>
+  <p>
+    <em>gz gets GzHandle</em><br/>
+    Reads the next line from the file specified by GzHandle, up to but not including the end-of-line character.
+    Similar to the standard Tcl <em>gets</em> command.
+  </p>
+  <p>
+    <em>gz read GzHandle ?NumBytes?</em><br/>
+    Reads all or <em>NumBytes</em> bytes from the file specified by GzHandle.
+    Similar to the standard Tcl <em>read</em> command.
+  </p>
+  <p>
+    <em>gz eof GzHandle</em><br/>
+    Returns 1 if an end-of-file condition occurred during the most recent operation on the file specified
+    by GzHandle, 0 otherwise.
+  </p>
+  <p>
+    <em>gz handles</em><br/>
+    Returns a list with the handles of all currently open gz files.
+  </p>
+
+  <h3>zip Option ?args ...?</h3>
+  <p>
+    The <em>zip</em> command allows to read and write .zip files. This format is common on Windows platforms
+    and supported by many tools (FreeZip, pkZip, Winzip, InfoZip and others).
+    A zip archive can contain multiple files, which makes the usage of the <em>zip</em> command slightly
+    more complicated than that of the <em>gz</em> command.
+  </p>
+  <p>
+    <em>zip open ZipFileName ?AccessMode?</em><br/>
+    For AccessMode <em>r</em> (the default), the archive specified by ZipFileName is opened for subsequent reading
+    operations by means of <em>zip read</em>.
+    For AccessMode <em>w</em> the archive is created, or trunctated if it already exists, for subsequent
+    writing operations with <em>zip write</em>.
+    If successful, the command returns a file handle required for subsequent calls to the <em>zip</em> command.
+  </p>
+  <p>
+    <em>zip close ZipHandle</em><br/>
+    Closes the archive specified by ZipHandle. If the file was openened for writing, all buffered data
+    is automatically flushed prior to closing the file.
+  </p>
+  <p>
+    <em>zip comment ZipHandle ?String?</em><br/>
+    Sets or retrieves the comment string of an archive. If String is specified and the archive was opened
+    for writing, then String is used as the new comment for the archive (it is actually written during
+    <em>gz close</em>). If String is not specified, the archive's comment string is returned, if any.
+  </p>
+  <p>
+    <em>zip set ZipHandle ?FileName? ?options?</em><br/>
+    Sets or returns the name of the "current file" within the archive. All calls to <em>zip write</em>,
+    <em>zip read</em> and <em>zip eof</em> refer to the current file. The FileName is actually just a
+    string and does not have to be the name of an existing file (though it's usually the name and path
+    of the file which is about to be zipped).
+    If the archive was opened for reading, options are not allowed. If the archive was opened for writing,
+    the following options are accepted:<br/>
+    <em>-level 0..9</em> defines the compression level and works like in the <em>deflate</em> command.<br/>
+    <em>-comment String</em> stores a comment string along with the specified file.<br/>
+    <em>-time integer</em> stores the file with a certain timestamp. The option value must be an integer
+    as returned by <em>[clock seconds]</em>.<br/>
+    <em>-attributes integer</em> stores file attribute flags along with the file. The flags are platform
+    specific (sorry, I've got no more information).<br/>
+  </p>
+  <p>
+    <em>zip write GzHandle Data</em><br/>
+    Compresses and writes Data to the archive. Data can be a binary string and always
+    refers to the "current file" as specified by <em>zip set</em>.
+  </p>
+  <p>
+    <em>zip read GzHandle ?NumBytes?</em><br/>
+    Reads all or <em>NumBytes</em> bytes from the file specified by GzHandle.
+    Similar to the standard Tcl <em>read</em> command.
+  </p>
+  <p>
+    <em>zip eof GzHandle</em><br/>
+    Returns 1 if an end-of-file condition occurred during the most recent operation on the file specified
+    by GzHandle, 0 otherwise.
+  </p>
+  <p>
+    <em>zip files GzHandle</em><br/>
+    Returns a list with the names of the files in the archive.
+  </p>
+  <p>
+    <em>zip info GzHandle FileName</em><br/>
+    Returns a list with information about the file specified by FileName. The list consists of five elements:
+    The timestamp of the file (as specified during writing with <em>zip set</em>, or -1 if not specified),
+    the compressed size of the file, the uncompressed size of the file, the file attributes
+    (see <em>zip set</em>), and the file comment (see <em>zip set</em>).
+  </p>
+  <p>
+    <em>zip handles</em><br/>
+    Returns a list with the handles of all currently open zip archives.
+  </p>
+
+  <h2><a name="notes">&nbsp;NOTES</a></h2>
+
+  <h3>Credits</h3>
+  <p>
+    This extension is based on the great work that was put into
+    <a href="http://www.info-zip.org/pub/infozip/zlib">Zlib</a> and
+    <a href="http://www.winimage.com/zLibDll">Minizip</a>.
+    Zlib is a compression library compatible with the gzip format. It is very portable and
+    works for virtually any computer hardware and operating system.
+    Zlib is written by Jean-Loup Gailly and Mark Adler, and is freely available.
+    Minizip, written by Gilles Vollant, is a library for working with zip files. It uses Zlib and is
+    included in the Zlib 1.1.3 distribution.
+  </p>
+
+  <h3>Limitations</h3>
+  <p>
+    Unfortunately, it is not possible to append files to a zip archive, nor to delete files from a
+    zip archive (the Minizip 1.15 library does not provide functions for that at this time).
+  </p>
+
+  <h3>And...</h3>
+  <p>
+    A more elegant implementation would have been to create a new channel type for gz and zip files
+    and do IO operations through regular puts, gets and read commands. If you are looking for something
+    like this, check out Andreas Kupries' <a href="http://www.oche.de/~akupries/soft/trf/index.html">
+    trf package</a>.
+  </p>
+
+  <h2><a name="examples">&nbsp;EXAMPLES</a></h2>
+
+  <h3>Deflate and inflate</h3>
+  <pre>
+  % set sComp [deflate -level 9 "We all live in a yellow submarine, yellow submarine, yellow submarine..."]
+  <i>(...Repetitive patterns are good for compression...)</i>
+  % inflate $sComp
+  We all live in a yellow submarine, yellow submarine, yellow submarine...
+  </pre>
+
+  <h3>The gz command</h3>
+  <pre>
+  % set hGz [gz open test.gz w]
+  4457920
+  % gz write $hGz "We all live in a yellow submarine, yellow submarine, yellow submarine...\n"
+  72
+  % gz close $hGz
+  %
+  % set hGz [gz open test.txt.gz]
+  4457920
+  % gz gets $hGz
+  We all live in a yellow submarine, yellow submarine, yellow submarine...
+  % gz close $hGz
+  </pre>
+
+  <h3>The zip command</h3>
+  <pre>
+  % set hZip [zip open test.zip w]
+  10289776
+  % zip set $hZip file1.txt -level 9 -comment "File 1" -time [clock seconds]
+  % zip write $hZip "This is the contents of file 1"
+  % zip set $hZip file2.txt -level 9 -comment "File 2" -time [clock seconds]
+  % zip write $hZip "This is the contents of file 2"
+  % zip comment $hZip "My first zip file"
+  %
+  % set hZip [zip open test.zip]
+  10244344
+  % zip comment $hZip
+  My first zip file
+  % zip files $hZip
+  file1.txt file2.txt
+  % zip info $hZip file1.txt
+  988336176 30 30 0 {File 1}
+  % zip info $hZip file1.txt
+  988336234 30 30 0 {File 2}
+  % zip set $hZip file1.txt
+  % zip read $hZip
+  This is the contents of file1
+  % zip set $hZip file2.txt
+  % zip read $hZip
+  This is the contents of file2
+  % zip close $hZip
+  %
+  </pre>
+
+  <h2><a name="installation">&nbsp;INSTALLATION</a></h2>
+
+  <h3>&nbsp;General</h3>
+  <p>
+    You will need the <a href="http://www.info-zip.org/pub/infozip/zlib">Zlib 1.1.3</a>
+    library to run mkZiplib. For the Windows platform this library (zlib.dll)
+    is included in the mkZiplib distribution.
+    On Unix it is very easy to build: "./configure && make && make install" is all
+    it normally takes.
+    The minizip sources (zip.c, zip.h, unzip.c, unzip.h) are part of the Zlib package
+    and are also included herein. They are not built as a library but statically linked.
+  </p>
+  <p>
+    mkZiplib is written in C and comes with a DLL for Windows. On Unix, the package needs
+    to be compiled into a shared library first (see below). mkZiplib works with Tcl/Tk
+    version 8.2 and higher and is stubs-enabled.
+  </p>
+  <p>
+    To install, simply place the directory "mkZiplib1.0" into one of the directories contained in
+    the global Tcl variable "auto_path". For a standard Tcl/Tk installation, this is commonly
+    "c:/program files/tcl/lib" (Windows) and "/usr/local/lib" (Unix).
+  </p>
+  <h3>Compiling</h3>
+  <p>
+    If you don't have Zlib 1.1.3 already in your system (libz.a), then download, compile
+    and install it first. All it normally takes is:
+  </p>
+  <pre>
+  ./configure && make && make install</pre>
+  <p>
+    Next, compile mkZiplib: Provide the correct path to "tcl.h" and link against "tcl83.lib"
+    and "zlib.lib" (Windows) or "libtcl83.a" and "libz.a" (Unix) respectively. If you use stubs, define USE_TCL_STUBS and
+    link against "tclstub83.lib" (Windows) or "libtclstub83.a" (Unix) instead.
+  </p>
+  <p>
+    For Visual C++, the following command should work:
+  </p>
+  <pre>
+  cl /I c:/progra~1/tcl/include /D USE_TCL_STUBS /c mkZiplib10.c zip.c unzip.c
+  link c:/progra~1/tcl/lib/tclstub83.lib zlib.lib /dll mkZiplib10.obj zip.obj unzip.obj</pre>
+  <p>
+    On Linux 2.2, this here works fine:
+  </p>
+  <pre>
+  gcc -shared -DUSE_TCL_STUBS -ltclstub8.3 -lz -o mkZiplib10.so mkZiplib10.c zip.c unzip.c</pre>
+
+  <h3>Test</h3>
+  <p>
+    Test the installation by opening a tclsh or wish and entering "package require mkZiplib".
+    The string "1.0" should appear. If it fails, "cd" into the directory "mkZiplib1.0" and
+    load it directly with "load ./mkZiplib10.dll" (Windows) or "load ./mkZiplib10.so" (Unix).
+    If no error occured, it succeeded and something must be wrong with the location of "mkZiplib1.0".
+  </p>
+
+  <h2><a name="changes">&nbsp;CHANGES</a></h2>
+  <p>
+    No changes - Initial version.
+  </p>
+
+  <h2><a name="author">&nbsp;AUTHOR</a></h2>
+  <p>
+    Michael Kraus<br/>
+    <a href="mailto:michael@kraus5.de">mailto:michael@kraus5.de</a><br/>
+    <a href="http://mkextensions.sourceforge.net">http://mkextensions.sourceforge.net</a><br/>
+  </p>
+</body>
+</html>
